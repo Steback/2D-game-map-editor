@@ -16,9 +16,6 @@ class Editor {
         void render();
         void destroy();
 
-    public:
-        int ticksLastFrame{};
-
     private:
         bool editorIsRunning;
         SDL_Window* window{};

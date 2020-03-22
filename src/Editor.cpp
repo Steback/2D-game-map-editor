@@ -57,17 +57,7 @@ void Editor::processInput() {
 }
 
 void Editor::update() {
-    // Wait until 16ms has ellapsed since the last frame
-    while ( !SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME) );
 
-    // Delta time is the difference in ticks from last frame converted to seconds
-    float deltaTime = ( SDL_GetTicks() - static_cast<float>(ticksLastFrame) ) / 1000.0f;
-
-    // Clamp deltaTime to a maximum value
-    deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
-
-    // Sets the new ticks for the current frame to be used in the next pass
-    ticksLastFrame = SDL_GetTicks();
 }
 
 void Editor::render() {
