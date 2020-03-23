@@ -9,7 +9,7 @@ Editor::~Editor() = default;
 bool Editor::isRunning() const { return editorIsRunning; }
 
 void Editor::initialize(const int &_width, const int &_height) {
-    if ( SDL_Init(SDL_INIT_VIDEO) != 0 ) {
+    if ( SDL_Init(SDL_INIT_EVERYTHING) != 0 ) {
         std::cerr << "Error initializing SDL." << std::endl;
         editorIsRunning = false;
     }

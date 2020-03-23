@@ -20,7 +20,7 @@ class Editor {
         bool editorIsRunning;
         SDL_Window* window{};
         SDL_Renderer* renderer{};
-        SDL_Event event;
+        SDL_Event event{};
 };
 
 #endif

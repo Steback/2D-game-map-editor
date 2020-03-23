@@ -4,16 +4,19 @@ project(2D_Game_Map_Editor)
 set(CMAKE_CXX_STANDARD 14)
 
 find_library(SDL2 REQUIRED)
-find_library(SDL2_image REQUIRED)
-find_library(SDL2_ttf REQUIRED)
-find_library(SDL2_mixer REQUIRED)
-find_library(lua REQUIRED)
+find_library(GLEW REQUIRED)
+find_library(OpenGL REQUIRED)
 
-file(GLOB SOURCE_HEADER ./src/*.h )
+add_library(glad include/glad/glad.h src/glad.c)
+
+file(GLOB HEADER_FILES ./src/*.h )
 file(GLOB SOURCE_FILES ./src/*.cpp )
+file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
 
-add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${SOURCE_HEADER} ${SOURCE_COMPONENTS_HEADER} )
-target_link_libraries( ${PROJECT_NAME} SDL2 SDL2_image SDL2_ttf SDL2_mixer lua )
+include_directories("include/glad")
+
+add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${IMGUI_SOURCE} )
+target_link_libraries( ${PROJECT_NAME} SDL2 GLEW OpenGL glad )
 
 set(EXECUTABLE_OUTPUT_PATH "..")
 
