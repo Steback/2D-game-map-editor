@@ -8,23 +8,56 @@ Editor::~Editor() = default;
 
 bool Editor::isRunning() const { return editorIsRunning; }
 
+void Editor::getData() {
+    SDL_version compiled;
+    SDL_version linked;
+    SDL_VERSION(&compiled);
+    SDL_GetVersion(&linked);
+
+    fprintf(stdout, "SDL version: %d.%d.%d \n",compiled.major, compiled.minor, compiled.patch);
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+}
+
+std::string Editor::setGLSLVersion() {
+    // Decide GL+GLSL versions
+    #if __APPLE__
+        // GL 3.2 Core + GLSL 150
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+        return "#version 150";
+    #else
+    #ifdef __LINUX__
+        // GL 4.5 + GLSL 450, adapt to your case
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+
+        return "#version 450";
+    #else
+        // GL 3.0 + GLSL 130
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+        return "#version 130";
+    #endif
+    #endif
+}
+
 void Editor::initialize(const int &_width, const int &_height) {
     if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0 ) {
         std::cerr << "Error initializing SDL: " << SDL_GetError() << std::endl;
         editorIsRunning = false;
     }
-
-    // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
-    // Create window with graphics context
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     auto window_flags = static_cast<SDL_WindowFlags>(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
@@ -37,28 +70,32 @@ void Editor::initialize(const int &_width, const int &_height) {
             window_flags
     );
 
-    gl_context = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, gl_context);
-    SDL_GL_SetSwapInterval(1); // Enable vsync
+    glsl_version = setGLSLVersion();
 
     if ( !window ) {
         std::cerr << "Error creating SDL window." << std::endl;
         editorIsRunning = false;
     }
 
-    glewInit();
+    gl_context = SDL_GL_CreateContext(window);
+    SDL_GL_MakeCurrent(window, gl_context);
+    SDL_GL_SetSwapInterval(1); // Enable vsync
+
+    auto gl = glewInit();
+
+    if( gl != 0) {
+        std::cerr << "Failed to initialize OpenGL loader: " << glewGetErrorString(gl) << std::endl;
+        editorIsRunning = false;
+    }
 
     ImGui::StyleColorsDark();
 
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 
-    show_demo_window = true;
-    show_another_window = false;
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    f = 0.0f;
-    counter = 0;
+    getData();
 }
 
 void Editor::processInput() {
@@ -81,49 +118,23 @@ void Editor::processInput() {
     }
 }
 
-void Editor::update() {
+void Editor::render() {
+
+}
+
+void Editor::renderUI() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(window);
     ImGui::NewFrame();
 
-    if ( show_demo_window ) {
-        ImGui::ShowDemoWindow(&show_demo_window);
-    }
-
-    ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-    ImGui::Text("This is some useful text."); // Display some text (you can use a format strings too)
-    ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
-    ImGui::Checkbox("Another Window", &show_another_window);
-
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-    if ( ImGui::Button("Button") ) { // Buttons return true when clicked (most widgets return true when edited/activated)
-        counter++;
-    }
-
-    ImGui::SameLine();
-    ImGui::Text("counter = %d", counter);
-
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    // render your GUI
+    ImGui::Begin("Demo window");
+    ImGui::Button("Hello!");
     ImGui::End();
 
-    if ( show_another_window ) {
-        ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-
-        if ( ImGui::Button("Close Me") ) {
-            show_another_window = false;
-        }
-
-        ImGui::End();
-    }
-}
-
-void Editor::render() {
     ImGui::Render();
-    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+
+    glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
     glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

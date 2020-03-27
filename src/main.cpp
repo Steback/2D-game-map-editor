@@ -12,8 +12,8 @@ int main(int, const char**) {
 
     while ( editor->isRunning() ) {
         editor->processInput();
-        editor->update();
         editor->render();
+        editor->renderUI();
     }
 
     editor->destroy();

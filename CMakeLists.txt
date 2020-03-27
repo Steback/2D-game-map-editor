@@ -6,15 +6,14 @@ set(CMAKE_CXX_STANDARD 14)
 find_library(SDL2 REQUIRED)
 find_library(GLEW REQUIRED)
 find_library(OpenGL REQUIRED)
+#add_library( gl3w lib/GL/gl3w.c lib/GL/gl3w.h )
 
 file(GLOB HEADER_FILES ./src/*.h )
 file(GLOB SOURCE_FILES ./src/*.cpp )
 file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
 
-include_directories("include/glad")
-
 add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${IMGUI_SOURCE} )
-target_link_libraries( ${PROJECT_NAME} SDL2 GLEW OpenGL )
+target_link_libraries( ${PROJECT_NAME} SDL2 GLEW OpenGL ${CMAKE_DL_LIBS} )
 
 set(EXECUTABLE_OUTPUT_PATH "..")
 
