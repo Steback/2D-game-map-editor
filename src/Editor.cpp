@@ -34,7 +34,7 @@ std::string Editor::setGLSLVersion() {
         return "#version 150";
     #else
     #ifdef __LINUX__
-        // GL 4.5 + GLSL 450, adapt to your case
+        // GL 4.5 + GLSL 450
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -70,16 +70,20 @@ void Editor::initialize(const int &_width, const int &_height) {
             window_flags
     );
 
-    glsl_version = setGLSLVersion();
-
     if ( !window ) {
         std::cerr << "Error creating SDL window." << std::endl;
         editorIsRunning = false;
     }
 
+    glsl_version = setGLSLVersion();
+
     gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
-    SDL_GL_SetSwapInterval(1); // Enable vsync
+
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+    // Enable vsync
+    SDL_GL_SetSwapInterval(1);
 
     auto gl = glewInit();
 
@@ -88,10 +92,12 @@ void Editor::initialize(const int &_width, const int &_height) {
         editorIsRunning = false;
     }
 
-    ImGui::StyleColorsDark();
+    glEnable(GL_TEXTURE_2D);
 
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+
+    ImGui::StyleColorsDark();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -119,17 +125,26 @@ void Editor::processInput() {
 }
 
 void Editor::render() {
-
-}
-
-void Editor::renderUI() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(window);
     ImGui::NewFrame();
 
-    // render your GUI
-    ImGui::Begin("Demo window");
-    ImGui::Button("Hello!");
+    static float f = 0.0f;
+    static int counter = 0;
+
+    ImGui::Begin("Hello, world!");
+
+    ImGui::Text("This is some useful text.");
+
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::ColorEdit3("clear color", (float*)&clear_color);
+
+    if (ImGui::Button("Button"))
+        counter++;
+    ImGui::SameLine();
+    ImGui::Text("counter = %d", counter);
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
 
     ImGui::Render();
@@ -139,6 +154,10 @@ void Editor::renderUI() {
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     SDL_GL_SwapWindow(window);
+}
+
+void Editor::renderUI() {
+
 }
 
 void Editor::destroy() {

@@ -13,7 +13,6 @@ int main(int, const char**) {
     while ( editor->isRunning() ) {
         editor->processInput();
         editor->render();
-        editor->renderUI();
     }
 
     editor->destroy();
