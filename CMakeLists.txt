@@ -3,18 +3,17 @@ project(2D_Game_Map_Editor)
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_library(SDL2 REQUIRED)
-find_library(SDL2_image REQUIRED)
 find_library(GLEW REQUIRED)
+find_library(glfw REQUIRED)
 find_library(OpenGL REQUIRED)
 
 file(GLOB HEADER_FILES ./src/*.h )
 file(GLOB SOURCE_FILES ./src/*.cpp )
 file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
-file(GLOB IMGUI_SDL_SOURCE ./lib/imgui_sdl/*.cpp )
+file(GLOB IMGUI_GLFW_SOURCE ./lib/imgui_glfw/*.cpp )
 
-add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${IMGUI_SOURCE} ${IMGUI_SDL_SOURCE} )
-target_link_libraries( ${PROJECT_NAME} SDL2 SDL2_image GLEW OpenGL )
+add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${IMGUI_SOURCE} ${IMGUI_GLFW_SOURCE} )
+target_link_libraries( ${PROJECT_NAME} glfw GLEW OpenGL )
 
 set(EXECUTABLE_OUTPUT_PATH "..")
 

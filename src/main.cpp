@@ -1,109 +1,63 @@
+#include "../lib//imgui/imgui.h"
+#include "../lib/imgui_glfw/imgui_impl_glfw.h"
+#include "../lib//imgui/imgui_impl_opengl3.h"
 #include <iostream>
 #include <string>
 
-#include <SDL2/SDL.h>
+// OpenGL loader
 #include <GL/glew.h>
-#include "../lib/imgui/imgui.h"
-#include "../lib/imgui/imgui_impl_sdl.h"
-#include "../lib/imgui/imgui_impl_opengl3.h"
 
-// Function to define the GLSL versions
-std::string setGLSLVersion() {
-    // Decide GL+GLSL versions
-    #if __APPLE__
-        // GL 3.2 Core + GLSL 150
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+// Include glfw3.h after our OpenGL definitions
+#include <GLFW/glfw3.h>
 
-        return "#version 150";
-    #else
-    #ifdef __LINUX__
-        // GL 4.5 + GLSL 450
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+// Windows bullshit
+#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
+#pragma comment(lib, "legacy_stdio_definitions")
+#endif
 
-        return "#version 450";
-    #else
-        // GL 3.0 + GLSL 130
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
-        return "#version 130";
-    #endif
-    #endif
+static void glfw_error_callback(int error, const char* description) {
+    std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
 
-int main(int, const char**) {
-    // Bool variable to define if loop run or not
-    bool isRunnig = true;
+int main(int, char**) {
+    // Setup window
+    glfwSetErrorCallback(glfw_error_callback);
+    if (!glfwInit())
+        return 1;
 
-    // Call function for define de GL version
-    std::string glsl_version = setGLSLVersion();
+    // Decide GL+GLSL versions
+#if __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
+#endif
 
-    // Use this function to initialize the SDL library. This must be called before using most other SDL functions.
-    if ( SDL_Init( SDL_INIT_EVERYTHING ) != 0 ) {
-        std::cerr << "Error initializing SDL: " << SDL_GetError() << std::endl;
-        isRunnig = false;
-    }
+    // GL 4.5 + GLSL 450
+    std::string glsl_version = "#version 450";
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
     // Create window with graphics context
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
 
-    // Window flags for SDL window
-    auto window_flags = static_cast<SDL_WindowFlags>(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-
-    // Use this function to create a window with the specified position, dimensions, and flags.
-    SDL_Window* window = SDL_CreateWindow(
-            "Game Map Editor",
-            SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED,
-            1280,
-            720,
-            window_flags
-    );
-
-    if ( !window ) {
-        std::cerr << "Error creating SDL window." << std::endl;
-        isRunnig = false;
+    if (window == nullptr) {
+        return 1;
     }
 
-    // CUse this function to create an OpenGL context for use with an OpenGL window, and make it current.
-    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-
-    // Use this function to set up an OpenGL context for rendering into an OpenGL window.
-    SDL_GL_MakeCurrent(window, gl_context);
-
-    // Use this function to set an OpenGL window attribute before window creation.
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    // This function makes the OpenGL or OpenGL ES context of the specified window current on the calling thread
+    glfwMakeContextCurrent(window);
 
     // Enable vsync
-    SDL_GL_SetSwapInterval(1);
+    glfwSwapInterval(1);
 
-    // Initializing GLEW
-    if( glewInit() != GLEW_OK ) {
-        std::cerr << "Failed to initialize OpenGL loader: " << glewGetErrorString( glewInit() ) << std::endl;
-        isRunnig = false;
+    // Initialize OpenGL loader
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Failed to initialize OpenGL loader!" << std::endl;
+        return 1;
     }
 
-    // A structure that contains information about the version of SDL in use.
-    SDL_version compiled;
-    SDL_version linked;
-
-    // Use this macro to determine the SDL version your program was compiled against.
-    SDL_VERSION(&compiled);
-
-    // Use this function to get the version of SDL that is linked against your program.
-    SDL_GetVersion(&linked);
-
-    fprintf(stdout, "SDL version: %d.%d.%d \n",compiled.major, compiled.minor, compiled.patch);
+    // GLFW Version
+    std::cout <<  "GLFW version: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
 
     // glGetString returns a pointer to a static string describing some aspect of the current GL connection.
     // Returns the company responsible for this GL implementation. This name does not change from release to release.
@@ -118,59 +72,41 @@ int main(int, const char**) {
     // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
-    // glEnable and glDisable enable and disable various capabilities.
-    // GL_TEXTURE_2D: If enabled and no fragment shader is active, two-dimensional texturing is performed
-    glEnable(GL_TEXTURE_2D);
-
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    // Setup Platform/Renderer bindings
-    ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
-
-    // Initiallise Dear ImGui
-    ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
-
+    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+
+    // Load Font
+    io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
 
     // Our state
     bool show_demo_window = true;
+    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
-    while ( isRunnig ) {
-        // A union that contains structures for the different event types.
-        SDL_Event event;
+    while ( !glfwWindowShouldClose(window) ) {
 
-        // Use this function to poll for currently pending events.
-        SDL_PollEvent(&event);
-
-        ImGui_ImplSDL2_ProcessEvent(&event);
-
-        if ( event.type == SDL_QUIT ) {
-            isRunnig = false;
-        }
-
-        if ( event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window) ) {
-            isRunnig = false;
-        }
-
-        if ( event.type == SDL_KEYDOWN ) {
-            if ( event.key.keysym.sym == SDLK_ESCAPE ) {
-                isRunnig = false;
-            }
-        }
+        // This function processes only those events that are already in the event queue and then returns immediately.
+        glfwPollEvents();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(window);
+        ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        if ( show_demo_window ) {
+            ImGui::ShowDemoWindow(&show_demo_window);
+        }
+
         static float f = 0.0f;
         static int counter = 0;
 
@@ -182,6 +118,7 @@ int main(int, const char**) {
 
         // Edit bools storing our window open/close state
         ImGui::Checkbox("Demo Window", &show_demo_window);
+        ImGui::Checkbox("Another Window", &show_another_window);
 
         // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
@@ -190,47 +127,67 @@ int main(int, const char**) {
         ImGui::ColorEdit3("clear color", (float*)&clear_color);
 
         // Buttons return true when clicked (most widgets return true when edited/activated)
-        if ( ImGui::Button("Button") ) {
+        if ( ImGui::Button("Button") )     {
             counter++;
         }
 
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
 
+        ImGui::Text("GLFW version: %d,%d,%d", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION );
+        ImGui::Text("OpenGL version: %s", glGetString(GL_VERSION) );
+        ImGui::Text("GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION) );
+        ImGui::Text("Vendor: %s", glGetString(GL_VENDOR) );
+        ImGui::Text("Renderer: %s", glGetString(GL_RENDERER) );
+
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
+
+        if ( show_another_window ) {
+            // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Begin("Another Window", &show_another_window);
+            ImGui::Text("Hello from another window!");
+
+            if ( ImGui::Button("Close Me") ) {
+                show_another_window = false;
+            }
+
+            ImGui::End();
+        }
 
         // Rendering
         ImGui::Render();
 
+        int display_w, display_h;
+
+        // This function retrieves the size, in pixels, of the framebuffer of the specified window.
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+
         // glViewport specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
-        glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
+        glViewport(0, 0, display_w, display_h);
 
         // glClearColor specifies the red, green, blue, and alpha values used by glClear to clear the color buffers.
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 
-        // lClear sets the bitplane area of the window to values previously selected by glClearColor, glClearIndex, glClearDepth, glClearStencil, and glClearAccum.
+        // glClear sets the bitplane area of the window to values previously selected by glClearColor, glClearIndex, glClearDepth, glClearStencil, and glClearAccum.
         glClear(GL_COLOR_BUFFER_BIT);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        // Use this function to update a window with OpenGL rendering.
-        SDL_GL_SwapWindow(window);
+        // This function swaps the front and back buffers of the specified window.
+        glfwSwapBuffers(window);
     }
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    // Use this function to create an OpenGL context for use with an OpenGL window, and make it current.
-    SDL_GL_DeleteContext(gl_context);
+    // This function destroys the specified window and its context.
+    glfwDestroyWindow(window);
 
-    // Use this function to destroy a window.
-    SDL_DestroyWindow(window);
-
-    // Use this function to clean up all initialized subsystems. You should call it upon all exit conditions.
-    SDL_Quit();
+    // This function destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources.
+    glfwTerminate();
 
     return 0;
 }
