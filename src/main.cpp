@@ -1,3 +1,4 @@
+#include "Constants.h"
 #include "Editor.h"
 
 int main(int, char**) {
@@ -8,7 +9,7 @@ int main(int, char**) {
 
     auto* editor = new Editor(io);
 
-    editor->initialized();
+    editor->initialized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Main loop
     while ( editor->isRunning() ) {

@@ -19,10 +19,10 @@
 
 class Editor {
     public:
-        Editor(ImGuiIO& _io);
+        explicit Editor(ImGuiIO& _io);
         ~Editor();
         bool isRunning();
-        void initialized();
+        void initialized(const int& _width, const int& _height);
         void processInput();
         void renderUI();
         void render();
@@ -32,7 +32,7 @@ class Editor {
         bool editorIsRunning;
 
         // Create window with graphics context
-        GLFWwindow* window;
+        GLFWwindow* window{};
 
         ImGuiIO io;
 

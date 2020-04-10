@@ -150,7 +150,7 @@ Editor::~Editor() = default;
 
 bool Editor::isRunning() { return editorIsRunning; }
 
-void Editor::initialized() {
+void Editor::initialized(const int& _width, const int& _height) {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if ( !glfwInit() ) {
@@ -165,7 +165,7 @@ void Editor::initialized() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 
     // Create window with graphics context
-    window = glfwCreateWindow(1280, 720, "2d Map Editor", nullptr, nullptr);
+    window = glfwCreateWindow(_width, _height, "2D Map Editor", nullptr, nullptr);
 
     if ( !window ) {
         std::cout << "GLFW Window creation failed" << std::endl;
