@@ -27,6 +27,7 @@ class Editor {
         void renderUI();
         void render();
         void destroy();
+        static void getInfo(const bool& _open);
 
     private:
         bool editorIsRunning;
