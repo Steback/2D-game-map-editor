@@ -44,8 +44,6 @@ void main()                                                                   \n
 }";
 
 // Our state
-bool show_demo_window = true;
-bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 void createTriangle() {
@@ -153,8 +151,9 @@ bool Editor::isRunning() { return editorIsRunning; }
 void Editor::initialized(const int& _width, const int& _height) {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
+
     if ( !glfwInit() ) {
-        glfwTerminate();
+        editorIsRunning = false;
     }
 
     // GL 4.5 + GLSL 450
@@ -170,7 +169,6 @@ void Editor::initialized(const int& _width, const int& _height) {
     if ( !window ) {
         std::cout << "GLFW Window creation failed" << std::endl;
         editorIsRunning = false;
-        glfwTerminate();
     }
 
     // This function makes the OpenGL or OpenGL ES context of the specified window current on the calling thread
@@ -186,25 +184,7 @@ void Editor::initialized(const int& _width, const int& _height) {
     if ( glewInit() != GLEW_OK ) {
         std::cout << "GLEW initialisation failed!" << std::endl;
         editorIsRunning = false;
-        glfwDestroyWindow(window);
-        glfwTerminate();
     }
-
-    // GLFW Version
-    std::cout <<  "GLFW version: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
-
-    // glGetString returns a pointer to a static string describing some aspect of the current GL connection.
-    // Returns the company responsible for this GL implementation. This name does not change from release to release.
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
-    // Returns a version or release number for the shading language.
-    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-
-    // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
-    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-
-    // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -235,57 +215,28 @@ void Editor::renderUI() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    if ( show_demo_window ) {
-        ImGui::ShowDemoWindow(&show_demo_window);
-    }
-
-    static float f = 0.0f;
-    static int counter = 0;
-
     // Create a window called "Hello, world!" and append into it.
-    ImGui::Begin("Hello, world!");
+    ImGui::Begin("Version of GLFW, GLSL and OpenGL");
 
     // Display some text (you can use a format strings too)
-    ImGui::Text("This is some useful text.");
-
-    // Edit bools storing our window open/close state
-    ImGui::Checkbox("Demo Window", &show_demo_window);
-    ImGui::Checkbox("Another Window", &show_another_window);
-
-    // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-
-    // Edit 3 floats representing a color
-    ImGui::ColorEdit3("clear color", (float*)&clear_color);
-
-    // Buttons return true when clicked (most widgets return true when edited/activated)
-    if ( ImGui::Button("Button") )     {
-        counter++;
-    }
-
-    ImGui::SameLine();
-    ImGui::Text("counter = %d", counter);
-
+    // GLFW Version
     ImGui::Text("GLFW version: %d,%d,%d", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION );
+
+    // glGetString returns a pointer to a static string describing some aspect of the current GL connection.
+    // Returns the company responsible for this GL implementation. This name does not change from release to release.
     ImGui::Text("OpenGL version: %s", glGetString(GL_VERSION) );
+
+    // Returns a version or release number for the shading language.
     ImGui::Text("GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION) );
+
+    // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
     ImGui::Text("Vendor: %s", glGetString(GL_VENDOR) );
+
+    // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
     ImGui::Text("Renderer: %s", glGetString(GL_RENDERER) );
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
-
-    if ( show_another_window ) {
-        // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello from another window!");
-
-        if ( ImGui::Button("Close Me") ) {
-            show_another_window = false;
-        }
-
-        ImGui::End();
-    }
 }
 
 void Editor::render() {
