@@ -6,11 +6,6 @@
 #include "../lib/imgui_glfw/imgui_impl_glfw.h"
 #include "../lib//imgui/imgui_impl_opengl3.h"
 
-// OpenGL Math(GLM)
-#include "../lib/glm/glm.hpp"
-#include "../lib/glm/gtc/matrix_transform.hpp"
-#include "../lib/glm/gtc/type_ptr.hpp"
-
 // OpenGL loader
 #include <GL/glew.h>
 
@@ -26,11 +21,11 @@ class Editor {
         static bool isRunning();
         void initialized(const int& _width, const int& _height);
         void processInput();
-        static void renderUI();
+        void renderUI();
         void render();
         void destroy();
 
-    friend class EditorUI;
+        friend class EditorUI;
 
     private:
         static bool editorIsRunning;
@@ -38,7 +33,9 @@ class Editor {
         // Create window with graphics context
         GLFWwindow* window{};
 
-        ImGuiIO io;
+        ImGuiIO& io;
+        int displayWidth{};
+        int displayHeight{};
 };
 
 #endif

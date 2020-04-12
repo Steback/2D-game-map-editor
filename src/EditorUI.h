@@ -6,6 +6,8 @@ class EditorUI {
         EditorUI();
         ~EditorUI();
         static void mainMenuBar();
+        static void assetsPanel(float& _x, float& _y);
+        static void statsPanel(float& _x, float& _y);
         static void getInfo(const bool& _open);
 
     private:

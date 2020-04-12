@@ -2,22 +2,11 @@
 #include <string>
 
 #include "Editor.h"
-#include "Constants.h"
-
 #include "EditorUI.h"
 
 static void glfw_error_callback(int error, const char* description) {
     std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
-
-// Windows bullshit
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-#pragma comment(lib, "legacy_stdio_definitions")
-#endif
-
-#if __APPLE__
-glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
-#endif
 
 Editor::Editor(ImGuiIO& _io) : io(_io) {  }
 
@@ -41,6 +30,16 @@ void Editor::initialized(const int& _width, const int& _height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+
+    // Windows bullshit
+    #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
+        #pragma comment(lib, "legacy_stdio_definitions")
+    #endif
+
+    // Required on Mac
+    #if __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
 
     // Create window with graphics context
     window = glfwCreateWindow(_width, _height, "2D Map Editor", nullptr, nullptr);
@@ -92,6 +91,8 @@ void Editor::renderUI() {
     ImGui::NewFrame();
 
     EditorUI::mainMenuBar();
+    EditorUI::assetsPanel(io.DisplaySize.x, io.DisplaySize.y);
+    EditorUI::statsPanel(io.DisplaySize.x, io.DisplaySize.y);
 
     // Rendering
     ImGui::Render();
@@ -100,13 +101,11 @@ void Editor::renderUI() {
 void Editor::render() {
     renderUI();
 
-    int display_w, display_h;
-
     // This function retrieves the size, in pixels, of the framebuffer of the specified window.
-    glfwGetFramebufferSize(window, &display_w, &display_h);
+    glfwGetFramebufferSize(window, &displayWidth, &displayHeight);
 
     // glViewport specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
-    glViewport(0, 0, display_w, display_h);
+    glViewport(0, 0, displayWidth, displayHeight);
 
     // glClearColor specifies the red, green, blue, and alpha values used by glClear to clear the color buffers.
     glClearColor(0.45f, 0.55f, 0.60f, 1.00f);

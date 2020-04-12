@@ -1,5 +1,6 @@
 #include "EditorUI.h"
 #include "Editor.h"
+#include "Constants.h"
 
 bool EditorUI::showInfo = false;
 
@@ -18,8 +19,8 @@ void EditorUI::mainMenuBar() {
 
             ImGui::Separator();
 
-            if ( ImGui::MenuItem("Options") ) { showInfo = !showInfo; }
-
+            if ( ImGui::MenuItem("Options") ) {  }
+            if ( ImGui::MenuItem("Versions") ) { showInfo = !showInfo; }
             if ( ImGui::MenuItem("Quit", "Alt+F4") ) { Editor::editorIsRunning = false; }
 
             ImGui::EndMenu();
@@ -34,6 +35,7 @@ void EditorUI::mainMenuBar() {
             if ( ImGui::MenuItem("Cut", "CTRL+X") ) {  }
             if ( ImGui::MenuItem("Copy", "CTRL+C") ) {  }
             if ( ImGui::MenuItem("Paste", "CTRL+V") ) {  }
+
             ImGui::EndMenu();
         }
 
@@ -43,8 +45,27 @@ void EditorUI::mainMenuBar() {
     getInfo(showInfo);
 }
 
+void EditorUI::assetsPanel(float& _x, float& _y) {
+    ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(250,_y), ImGuiCond_Always);
+    ImGui::Begin("Assets");
+
+    ImGui::End();
+}
+
+void EditorUI::statsPanel(float& _x, float& _y) {
+    ImGui::SetNextWindowPos(ImVec2(_x - 250,22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(250, _y), ImGuiCond_Always);
+    ImGui::Begin("Stats");
+
+    ImGui::End();
+}
+
 void EditorUI::getInfo(const bool& _open) {
     if ( _open ) {
+        ImGui::SetNextWindowPos(ImVec2(460, 270), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(280, 150), ImGuiCond_Always);
+
         // Create a window called "Hello, world!" and append into it.
         ImGui::Begin("Version of GLFW, GLSL and OpenGL");
 
@@ -65,7 +86,6 @@ void EditorUI::getInfo(const bool& _open) {
         // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
         ImGui::Text("Renderer: %s", glGetString(GL_RENDERER) );
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
 }
