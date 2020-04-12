@@ -17,26 +17,28 @@
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
 
+class EditorUI;
+
 class Editor {
     public:
         explicit Editor(ImGuiIO& _io);
         ~Editor();
-        bool isRunning();
+        static bool isRunning();
         void initialized(const int& _width, const int& _height);
         void processInput();
-        void renderUI();
+        static void renderUI();
         void render();
         void destroy();
-        static void getInfo(const bool& _open);
+
+    friend class EditorUI;
 
     private:
-        bool editorIsRunning;
+        static bool editorIsRunning;
 
         // Create window with graphics context
         GLFWwindow* window{};
 
         ImGuiIO io;
-
 };
 
 #endif

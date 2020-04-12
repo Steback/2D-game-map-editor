@@ -4,25 +4,26 @@
 #include "Editor.h"
 #include "Constants.h"
 
-// Our state
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+#include "EditorUI.h"
+
+static void glfw_error_callback(int error, const char* description) {
+    std::cerr << "Glfw Error " << error << ": " << description << std::endl;
+}
 
 // Windows bullshit
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char* description) {
-    std::cerr << "Glfw Error " << error << ": " << description << std::endl;
-}
-
 #if __APPLE__
 glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
 #endif
 
-Editor::Editor(ImGuiIO& _io) : io(_io), editorIsRunning(true) {  }
+Editor::Editor(ImGuiIO& _io) : io(_io) {  }
 
 Editor::~Editor() = default;
+
+bool Editor::editorIsRunning = true;
 
 bool Editor::isRunning() { return editorIsRunning; }
 
@@ -84,52 +85,20 @@ void Editor::processInput() {
     }
 }
 
-bool showInfo = false;
-
 void Editor::renderUI() {
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    // Menu bar
-    if ( ImGui::BeginMainMenuBar() ) {
-        if ( ImGui::BeginMenu("File") ) {
-            if ( ImGui::MenuItem("New") ) {  }
-            if ( ImGui::MenuItem("Open", "Ctrl+O") ) {  }
-            if ( ImGui::MenuItem("Save", "Ctrl+S") ) {  }
-            if ( ImGui::MenuItem("Save As..") ) { }
+    EditorUI::mainMenuBar();
 
-            ImGui::Separator();
-
-            if ( ImGui::MenuItem("Options") ) { showInfo = !showInfo; }
-
-            if ( ImGui::MenuItem("Quit", "Alt+F4") ) { editorIsRunning = false; }
-
-            ImGui::EndMenu();
-        }
-
-        if ( ImGui::BeginMenu("Edit") ) {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-            ImGui::EndMenu();
-        }
-
-        ImGui::EndMainMenuBar();
-    }
-
-    getInfo(showInfo);
+    // Rendering
+    ImGui::Render();
 }
 
 void Editor::render() {
     renderUI();
-
-    // Rendering
-    ImGui::Render();
 
     int display_w, display_h;
 
@@ -140,7 +109,7 @@ void Editor::render() {
     glViewport(0, 0, display_w, display_h);
 
     // glClearColor specifies the red, green, blue, and alpha values used by glClear to clear the color buffers.
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 
     // glClear sets the bitplane area of the window to values previously selected by glClearColor, glClearIndex, glClearDepth, glClearStencil, and glClearAccum.
     glClear(GL_COLOR_BUFFER_BIT);
@@ -162,31 +131,4 @@ void Editor::destroy() {
 
     // This function destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources.
     glfwTerminate();
-}
-
-void Editor::getInfo(const bool& _open) {
-    if ( _open ) {
-        // Create a window called "Hello, world!" and append into it.
-        ImGui::Begin("Version of GLFW, GLSL and OpenGL");
-
-        // Display some text (you can use a format strings too)
-        // GLFW Version
-        ImGui::Text("GLFW version: %d,%d,%d", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION );
-
-        // glGetString returns a pointer to a static string describing some aspect of the current GL connection.
-        // Returns the company responsible for this GL implementation. This name does not change from release to release.
-        ImGui::Text("OpenGL version: %s", glGetString(GL_VERSION) );
-
-        // Returns a version or release number for the shading language.
-        ImGui::Text("GLSL version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION) );
-
-        // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
-        ImGui::Text("Vendor: %s", glGetString(GL_VENDOR) );
-
-        // Returns the name of the renderer. This name is typically specific to a particular configuration of a hardware platform. It does not change from release to release.
-        ImGui::Text("Renderer: %s", glGetString(GL_RENDERER) );
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        ImGui::End();
-    }
 }

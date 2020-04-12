@@ -12,7 +12,7 @@ int main(int, char**) {
     editor->initialized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Main loop
-    while ( editor->isRunning() ) {
+    while ( Editor::isRunning() ) {
         editor->processInput();
         editor->render();
     }
