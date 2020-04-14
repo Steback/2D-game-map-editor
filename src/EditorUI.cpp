@@ -1,3 +1,7 @@
+#include <iostream>
+
+#include "../lib/stb/stb_image.h"
+
 #include "EditorUI.h"
 #include "Editor.h"
 #include "Constants.h"
@@ -47,15 +51,41 @@ void EditorUI::mainMenuBar() {
 
 void EditorUI::assetsPanel(float& _x, float& _y) {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(250,_y), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(250,_y - 22), ImGuiCond_Always);
     ImGui::Begin("Assets");
+
+    int imageWidth = 0;
+    int imageHeight = 0;
+    unsigned char* imageData = stbi_load("assets/images/chopper-single.png", &imageWidth, &imageHeight, nullptr, 4);
+
+    if ( imageData == nullptr ) {
+        std::cerr << "Fail load image" << std::endl;
+    }
+
+    // Create a OpenGL texture identifer
+    GLuint imageTexture;
+    glGenTextures(1, &imageTexture);
+    glBindTexture(GL_TEXTURE_2D, imageTexture);
+
+    // Setup filtering parameters for display
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Upload pixels into texture
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    stbi_image_free(imageData);
+
+    ImGui::Text("pointer = %u", imageTexture);
+    ImGui::Text("size = %d x %d", imageWidth, imageHeight);
+    ImGui::Image((void*)(intptr_t)imageTexture, ImVec2(static_cast<float>(imageWidth), static_cast<float>(imageHeight)));
 
     ImGui::End();
 }
 
 void EditorUI::statsPanel(float& _x, float& _y) {
     ImGui::SetNextWindowPos(ImVec2(_x - 250,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(250, _y), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(250, _y - 22), ImGuiCond_Always);
     ImGui::Begin("Stats");
 
     ImGui::End();

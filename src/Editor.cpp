@@ -17,7 +17,6 @@ bool Editor::editorIsRunning = true;
 bool Editor::isRunning() { return editorIsRunning; }
 
 void Editor::initialized(const int& _width, const int& _height) {
-    // Setup window
     glfwSetErrorCallback(glfw_error_callback);
 
     if ( !glfwInit() ) {
