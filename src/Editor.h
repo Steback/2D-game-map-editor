@@ -12,6 +12,7 @@
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
 
+class AssetsManager;
 class EditorUI;
 
 class Editor {
@@ -29,13 +30,13 @@ class Editor {
 
     private:
         static bool editorIsRunning;
-
-        // Create window with graphics context
         GLFWwindow* window{};
-
         ImGuiIO& io;
+        ImGuiStyle& style = ImGui::GetStyle();
+        ImGuiWindowFlags windowFlags{};
         int displayWidth{};
         int displayHeight{};
+        static AssetsManager manager;
 };
 
 #endif

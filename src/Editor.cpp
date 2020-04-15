@@ -4,9 +4,10 @@
 #include "Editor.h"
 #include "EditorUI.h"
 
-static void glfw_error_callback(int error, const char* description) {
-    std::cerr << "Glfw Error " << error << ": " << description << std::endl;
-}
+// TODO: Static objects
+#include "AssetsManager.h"
+
+AssetsManager Editor::manager;
 
 Editor::Editor(ImGuiIO& _io) : io(_io) {  }
 
@@ -17,8 +18,6 @@ bool Editor::editorIsRunning = true;
 bool Editor::isRunning() { return editorIsRunning; }
 
 void Editor::initialized(const int& _width, const int& _height) {
-    glfwSetErrorCallback(glfw_error_callback);
-
     if ( !glfwInit() ) {
         editorIsRunning = false;
     }
@@ -63,15 +62,25 @@ void Editor::initialized(const int& _width, const int& _height) {
         editorIsRunning = false;
     }
 
-    // Setup Dear ImGui style
+    // TODO: Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    style.WindowBorderSize = 0.0f;
+    style.WindowRounding = 0;
+    style.WindowPadding = ImVec2(10, 15);
 
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 
-    // Load Font
+    // TODO: Load Font
     io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
+
+    // TODO: load textures
+    manager.addTexture("chopper", "assets/images/chopper-single.png");
+
+    // TODO: Window flags
+    windowFlags |= ImGuiWindowFlags_NoTitleBar;
+    windowFlags |= ImGuiWindowFlags_NoResize;
 }
 
 void Editor::processInput() {
@@ -89,9 +98,11 @@ void Editor::renderUI() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+//    ImGui::ShowDemoWindow();
+
     EditorUI::mainMenuBar();
-    EditorUI::assetsPanel(io.DisplaySize.x, io.DisplaySize.y);
-    EditorUI::statsPanel(io.DisplaySize.x, io.DisplaySize.y);
+    EditorUI::assetsPanel(io.DisplaySize.x, io.DisplaySize.y, windowFlags);
+    EditorUI::statsPanel(io.DisplaySize.x, io.DisplaySize.y, windowFlags);
 
     // Rendering
     ImGui::Render();

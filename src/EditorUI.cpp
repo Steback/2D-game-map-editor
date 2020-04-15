@@ -3,7 +3,6 @@
 #include "AssetsManager.h"
 #include "EditorUI.h"
 #include "Editor.h"
-#include "Constants.h"
 
 bool EditorUI::showInfo = false;
 
@@ -48,27 +47,22 @@ void EditorUI::mainMenuBar() {
     getInfo(showInfo);
 }
 
-void EditorUI::assetsPanel(float& _x, float& _y) {
+void EditorUI::assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(250,_y - 22), ImGuiCond_Always);
-    ImGui::Begin("Assets");
+    ImGui::Begin("Entities", nullptr, _windowFlags);
 
-    AssetsManager manager;
-    manager.addTexture("chopper", "assets/images/chopper-single.png");
+    if( ImGui::Button("Add Entity") ) {
 
-    TextureManager* texture = manager.getTexture("chopper");
-
-    ImGui::Text("pointer = %u", texture->getTexture());
-    ImGui::Text("size = %d x %d", texture->getWidth(), texture->getHeight());
-    ImGui::Image((void*)(intptr_t)texture->getTexture(), ImVec2(50.0f, 50.0f));
+    }
 
     ImGui::End();
 }
 
-void EditorUI::statsPanel(float& _x, float& _y) {
+void EditorUI::statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
     ImGui::SetNextWindowPos(ImVec2(_x - 250,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(250, _y - 22), ImGuiCond_Always);
-    ImGui::Begin("Stats");
+    ImGui::Begin("Stats", nullptr, _windowFlags);
 
     ImGui::End();
 }
