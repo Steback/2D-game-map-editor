@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "TextureManager.h"
+#include "AssetsManager.h"
 #include "EditorUI.h"
 #include "Editor.h"
 #include "Constants.h"
@@ -53,15 +53,14 @@ void EditorUI::assetsPanel(float& _x, float& _y) {
     ImGui::SetNextWindowSize(ImVec2(250,_y - 22), ImGuiCond_Always);
     ImGui::Begin("Assets");
 
-    int imageWidth = 0;
-    int imageHeight = 0;
-    GLuint imageTexture;
+    AssetsManager manager;
+    manager.addTexture("chopper", "assets/images/chopper-single.png");
 
-    TextureManager::loadTexture("assets/images/chopper-single.png", imageWidth, imageHeight, imageTexture);
+    TextureManager* texture = manager.getTexture("chopper");
 
-    ImGui::Text("pointer = %u", imageTexture);
-    ImGui::Text("size = %d x %d", imageWidth, imageHeight);
-    ImGui::Image((void*)(intptr_t)imageTexture, ImVec2(50.0f, 50.0f));
+    ImGui::Text("pointer = %u", texture->getTexture());
+    ImGui::Text("size = %d x %d", texture->getWidth(), texture->getHeight());
+    ImGui::Image((void*)(intptr_t)texture->getTexture(), ImVec2(50.0f, 50.0f));
 
     ImGui::End();
 }

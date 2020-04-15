@@ -7,9 +7,19 @@
 
 class TextureManager {
     public:
-        static void loadTexture(const std::string& _filePath, int& _imageWidth, int& _imageHeight, GLuint& _imageTexture);
+        explicit TextureManager(const std::string& _filePath);
+        ~TextureManager();
+        GLuint getTexture() const;
+        int getWidth() const;
+        int getHeight() const;
 
     private:
+        int imageWidth{};
+        int imageHeight{};
+        GLuint imageTexture{};
+        unsigned char* imageData{};
+
+        void loadTexture(const std::string& _filePath);
 };
 
 #endif
