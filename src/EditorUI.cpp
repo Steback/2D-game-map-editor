@@ -10,7 +10,7 @@ EditorUI::EditorUI() = default;
 
 EditorUI::~EditorUI() = default;
 
-void EditorUI::mainMenuBar() {
+void EditorUI::mainMenuBar(float& _x, float& _y) {
     // Menu bar
     if ( ImGui::BeginMainMenuBar() ) {
         if ( ImGui::BeginMenu("File") ) {
@@ -44,7 +44,7 @@ void EditorUI::mainMenuBar() {
         ImGui::EndMainMenuBar();
     }
 
-    getInfo(showInfo);
+    getVersions(showInfo, _x, _y);
 }
 
 void EditorUI::assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
@@ -67,13 +67,13 @@ void EditorUI::statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
     ImGui::End();
 }
 
-void EditorUI::getInfo(const bool& _open) {
+void EditorUI::getVersions(bool& _open, float& _x, float& _y) {
     if ( _open ) {
-        ImGui::SetNextWindowPos(ImVec2(460, 270), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(280, 150), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(ImVec2((_x / 2) - 145, (_y / 2) - 80), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(290, 160), ImGuiCond_Always);
 
         // Create a window called "Hello, world!" and append into it.
-        ImGui::Begin("Version of GLFW, GLSL and OpenGL");
+        ImGui::Begin("Version of GLFW, GLSL and OpenGL", &_open, ImGuiWindowFlags_NoResize);
 
         // Display some text (you can use a format strings too)
         // GLFW Version

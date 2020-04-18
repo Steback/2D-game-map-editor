@@ -13,6 +13,7 @@
 #include <GLFW/glfw3.h>
 
 class AssetsManager;
+class EntityManager;
 class EditorUI;
 
 class Editor {
@@ -28,6 +29,9 @@ class Editor {
 
         friend class EditorUI;
 
+        static AssetsManager* assetsManager;
+        static EntityManager* entityManager;
+
     private:
         static bool editorIsRunning;
         GLFWwindow* window{};
@@ -36,7 +40,6 @@ class Editor {
         ImGuiWindowFlags windowFlags{};
         int displayWidth{};
         int displayHeight{};
-        static AssetsManager manager;
 };
 
 #endif

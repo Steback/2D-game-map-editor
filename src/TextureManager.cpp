@@ -1,5 +1,4 @@
 #include <iostream>
-#include <utility>
 
 #include "../lib/stb/stb_image.h"
 

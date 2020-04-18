@@ -3,17 +3,19 @@
 
 #include "Editor.h"
 #include "EditorUI.h"
+#include "Entity.h"
+#include "AssetsManager.h"
+#include "EntityManager.h"
+#include "components/SpriteComponent.h"
 
 // TODO: Static objects
-#include "AssetsManager.h"
-
-AssetsManager Editor::manager;
+AssetsManager* Editor::assetsManager = new AssetsManager();
+EntityManager* Editor::entityManager = new EntityManager();
+bool Editor::editorIsRunning = true;
 
 Editor::Editor(ImGuiIO& _io) : io(_io) {  }
 
 Editor::~Editor() = default;
-
-bool Editor::editorIsRunning = true;
 
 bool Editor::isRunning() { return editorIsRunning; }
 
@@ -76,11 +78,16 @@ void Editor::initialized(const int& _width, const int& _height) {
     io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
 
     // TODO: load textures
-    manager.addTexture("chopper", "assets/images/chopper-single.png");
+    assetsManager->addTexture("chopper", "assets/images/chopper-single.png");
 
     // TODO: Window flags
     windowFlags |= ImGuiWindowFlags_NoTitleBar;
     windowFlags |= ImGuiWindowFlags_NoResize;
+
+    // TODO: Create Entities
+    Entity& entity(entityManager->addEntity("Player", PLAYER_LAYER));
+
+    std::cout << "Entity's name: " << entity.name << std::endl;
 }
 
 void Editor::processInput() {
@@ -99,8 +106,7 @@ void Editor::renderUI() {
     ImGui::NewFrame();
 
 //    ImGui::ShowDemoWindow();
-
-    EditorUI::mainMenuBar();
+    EditorUI::mainMenuBar(io.DisplaySize.x, io.DisplaySize.y);
     EditorUI::assetsPanel(io.DisplaySize.x, io.DisplaySize.y, windowFlags);
     EditorUI::statsPanel(io.DisplaySize.x, io.DisplaySize.y, windowFlags);
 
@@ -130,6 +136,8 @@ void Editor::render() {
 }
 
 void Editor::destroy() {
+    delete assetsManager;
+
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

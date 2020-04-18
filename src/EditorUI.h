@@ -7,10 +7,10 @@ class EditorUI {
     public:
         EditorUI();
         ~EditorUI();
-        static void mainMenuBar();
+        static void mainMenuBar(float& _x, float& _y);
         static void assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags);
         static void statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags);
-        static void getInfo(const bool& _open);
+        static void getVersions(bool& _open, float& _x, float& _y);
 
     private:
         static bool showInfo;
