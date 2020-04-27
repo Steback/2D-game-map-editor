@@ -2,8 +2,6 @@
 #define SPRITECOMPONENT_H
 
 #include "../Component.h"
-#include "../AssetsManager.h"
-#include "../Editor.h"
 
 class SpriteComponent : public Component {
     public:
@@ -14,7 +12,6 @@ class SpriteComponent : public Component {
         explicit SpriteComponent(const std::string& assetTextureID,  bool _isFixed) {
             setTexture(assetTextureID);
         }
-
 
         void setTexture(const std::string& assetTextureID) {
 

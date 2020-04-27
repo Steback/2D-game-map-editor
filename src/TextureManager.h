@@ -9,15 +9,15 @@ class TextureManager {
     public:
         explicit TextureManager(const std::string& _filePath);
         ~TextureManager();
-        GLuint getTexture() const;
+        GLuint& getTexture();
         int getWidth() const;
         int getHeight() const;
+        void clearTexture();
 
     private:
-        int imageWidth{};
-        int imageHeight{};
-        GLuint imageTexture{};
-        unsigned char* imageData{};
+        int width{};
+        int height{};
+        GLuint textureID{};
 
         void loadTexture(const std::string& _filePath);
 };

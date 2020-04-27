@@ -25,6 +25,7 @@ class Editor {
         void processInput();
         void renderUI();
         void render();
+        void swapBuffers();
         void destroy();
 
         friend class EditorUI;

@@ -1,8 +1,13 @@
 #include <iostream>
 
+#include "../lib/glm/glm.hpp"
+
 #include "AssetsManager.h"
+#include "EntityManager.h"
 #include "EditorUI.h"
 #include "Editor.h"
+#include "Entity.h"
+#include "components/SpriteComponent.h"
 
 bool EditorUI::showInfo = false;
 
@@ -49,19 +54,21 @@ void EditorUI::mainMenuBar(float& _x, float& _y) {
 
 void EditorUI::assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(250,_y - 22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200,_y - 22), ImGuiCond_Always);
     ImGui::Begin("Entities", nullptr, _windowFlags);
 
     if( ImGui::Button("Add Entity") ) {
-
+        // TODO: Create Entities and Components
+        Entity& entity(Editor::entityManager->addEntity("Player", PLAYER_LAYER));
+        entity.addComponent<SpriteComponent>(" ");
     }
 
     ImGui::End();
 }
 
 void EditorUI::statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
-    ImGui::SetNextWindowPos(ImVec2(_x - 250,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(250, _y - 22), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(_x - 200,22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, _y - 22), ImGuiCond_Always);
     ImGui::Begin("Stats", nullptr, _windowFlags);
 
     ImGui::End();

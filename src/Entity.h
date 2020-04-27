@@ -19,13 +19,16 @@ class Entity {
         void listAllComponents() const;
 
         template <typename T, typename... Targs>
-        T& addComponent(Targs&&... args);
+        T& addComponent(Targs&&... args) {
+            T* newComponent( new T( std::forward<Targs>(args)... ) );
 
-        template <typename T>
-        bool hasComponent() const;
+            newComponent->owner = this;
+            components.emplace_back(newComponent);
+            componentType[&typeid(*newComponent)] = newComponent;
+            newComponent->initialize();
 
-        template <typename T>
-        T* getComponent();
+            return *newComponent;
+        }
 
         std::string name;
         LayerType layer;

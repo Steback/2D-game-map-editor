@@ -6,7 +6,6 @@
 #include "Entity.h"
 #include "AssetsManager.h"
 #include "EntityManager.h"
-#include "components/SpriteComponent.h"
 
 // TODO: Static objects
 AssetsManager* Editor::assetsManager = new AssetsManager();
@@ -83,11 +82,6 @@ void Editor::initialized(const int& _width, const int& _height) {
     // TODO: Window flags
     windowFlags |= ImGuiWindowFlags_NoTitleBar;
     windowFlags |= ImGuiWindowFlags_NoResize;
-
-    // TODO: Create Entities
-    Entity& entity(entityManager->addEntity("Player", PLAYER_LAYER));
-
-    std::cout << "Entity's name: " << entity.name << std::endl;
 }
 
 void Editor::processInput() {
@@ -128,7 +122,9 @@ void Editor::render() {
 
     // glClear sets the bitplane area of the window to values previously selected by glClearColor, glClearIndex, glClearDepth, glClearStencil, and glClearAccum.
     glClear(GL_COLOR_BUFFER_BIT);
+}
 
+void Editor::swapBuffers() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // This function swaps the front and back buffers of the specified window.
