@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-#include <glm/glm.hpp>
+#include "../lib/glm/glm.hpp"
 
 struct Shape {
     glm::vec3 pos;
@@ -13,7 +13,7 @@ struct Shape {
 
 class Mesh {
     public:
-        Mesh(Shape _vertices[], const unsigned int* _indices, const unsigned int& _numOfVertices, const unsigned int& _numOfIndices);
+        Mesh(const std::vector<Shape>& _vertices, const std::vector<GLuint>& _indices);
         ~Mesh();
         void RenderMesh() const;
         void ClearMesh();
@@ -22,7 +22,7 @@ class Mesh {
         GLuint VAO{}, VBO{}, IBO{};
         GLsizei indexCount{};
 
-        void CreateMesh(Shape _vertices[], const unsigned int* _indices, const unsigned int& _numOfVertices, const unsigned int& _numOfIndices);
+        void CreateMesh(const std::vector<Shape>& _vertices, const std::vector<GLuint>& _indices);
 };
 
 #endif

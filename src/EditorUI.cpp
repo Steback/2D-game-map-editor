@@ -2,20 +2,60 @@
 
 #include "../lib/glm/glm.hpp"
 
-#include "AssetsManager.h"
-#include "EntityManager.h"
 #include "EditorUI.h"
-#include "Editor.h"
-#include "Entity.h"
-#include "components/SpriteComponent.h"
+#include "Window.h"
 
-bool EditorUI::showInfo = false;
-
-EditorUI::EditorUI() = default;
+EditorUI::EditorUI(ImGuiIO& _io) : io(_io) {  }
 
 EditorUI::~EditorUI() = default;
 
-void EditorUI::mainMenuBar(float& _x, float& _y) {
+void EditorUI::initialized(GLFWwindow* _window) {
+    // TODO: Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    style.WindowBorderSize = 0.0f;
+    style.WindowRounding = 0;
+    style.WindowPadding = ImVec2(10, 15);
+
+    std::string glsl_version = "#version 330";
+
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(_window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+
+    // TODO: Load Font
+    io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
+
+    // TODO: Window flags
+    windowFlags |= ImGuiWindowFlags_NoTitleBar;
+    windowFlags |= ImGuiWindowFlags_NoResize;
+}
+
+void EditorUI::renderUI() {
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+//    ImGui::ShowDemoWindow();
+    mainMenuBar();
+    entitiesPanel();
+    statsPanel();
+
+    // Rendering
+    ImGui::Render();
+}
+
+void EditorUI::draw() {
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void EditorUI::destroy() {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+void EditorUI::mainMenuBar() {
     // Menu bar
     if ( ImGui::BeginMainMenuBar() ) {
         if ( ImGui::BeginMenu("File") ) {
@@ -28,7 +68,7 @@ void EditorUI::mainMenuBar(float& _x, float& _y) {
 
             if ( ImGui::MenuItem("Options") ) {  }
             if ( ImGui::MenuItem("Versions") ) { showInfo = !showInfo; }
-            if ( ImGui::MenuItem("Quit", "Alt+F4") ) { Editor::editorIsRunning = false; }
+            if ( ImGui::MenuItem("Quit", "Alt+F4") ) {  }
 
             ImGui::EndMenu();
         }
@@ -49,38 +89,37 @@ void EditorUI::mainMenuBar(float& _x, float& _y) {
         ImGui::EndMainMenuBar();
     }
 
-    getVersions(showInfo, _x, _y);
+    getVersions();
 }
 
-void EditorUI::assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
+void EditorUI::entitiesPanel() const {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200,_y - 22), ImGuiCond_Always);
-    ImGui::Begin("Entities", nullptr, _windowFlags);
+    ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+    ImGui::Begin("Entities", nullptr, windowFlags);
 
     if( ImGui::Button("Add Entity") ) {
         // TODO: Create Entities and Components
-        Entity& entity(Editor::entityManager->addEntity("Player", PLAYER_LAYER));
-        entity.addComponent<SpriteComponent>(" ");
+
     }
 
     ImGui::End();
 }
 
-void EditorUI::statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags) {
-    ImGui::SetNextWindowPos(ImVec2(_x - 200,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200, _y - 22), ImGuiCond_Always);
-    ImGui::Begin("Stats", nullptr, _windowFlags);
+void EditorUI::statsPanel() const {
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+    ImGui::Begin("Stats", nullptr, windowFlags);
 
     ImGui::End();
 }
 
-void EditorUI::getVersions(bool& _open, float& _x, float& _y) {
-    if ( _open ) {
-        ImGui::SetNextWindowPos(ImVec2((_x / 2) - 145, (_y / 2) - 80), ImGuiCond_Always);
+void EditorUI::getVersions() {
+    if ( showInfo ) {
+        ImGui::SetNextWindowPos(ImVec2((io.DisplaySize.x / 2) - 145, (io.DisplaySize.y / 2) - 80), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(290, 160), ImGuiCond_Always);
 
         // Create a window called "Hello, world!" and append into it.
-        ImGui::Begin("Version of GLFW, GLSL and OpenGL", &_open, ImGuiWindowFlags_NoResize);
+        ImGui::Begin("Version of GLFW, GLSL and OpenGL", &showInfo, ImGuiWindowFlags_NoResize);
 
         // Display some text (you can use a format strings too)
         // GLFW Version

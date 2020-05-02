@@ -9,11 +9,8 @@ find_library(OpenGL REQUIRED)
 
 file(GLOB SOURCE_FILES ./src/*.cpp )
 file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
-file(GLOB IMGUI_GLFW_SOURCE ./lib/imgui_glfw/*.cpp )
 
-include_directories( ${PROJECT_SOURCE_DIR}/lib/glm )
-
-add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE} ${IMGUI_GLFW_SOURCE} )
+add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE} )
 target_link_libraries( ${PROJECT_NAME} glfw GLEW OpenGL )
 
 set(EXECUTABLE_OUTPUT_PATH "..")

@@ -1,19 +1,29 @@
 #ifndef EDITOR_UI_H
 #define EDITOR_UI_H
 
+// Dear ImGui
 #include "../lib/imgui/imgui.h"
+#include "../lib/imgui/imgui_impl_glfw.h"
+#include "../lib/imgui/imgui_impl_opengl3.h"
 
 class EditorUI {
     public:
-        EditorUI();
+        explicit EditorUI(ImGuiIO& _io);
         ~EditorUI();
-        static void mainMenuBar(float& _x, float& _y);
-        static void assetsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags);
-        static void statsPanel(float& _x, float& _y, ImGuiWindowFlags _windowFlags);
-        static void getVersions(bool& _open, float& _x, float& _y);
+        void initialized(GLFWwindow* _window);
+        void renderUI();
+        void draw();
+        void destroy();
+        void mainMenuBar();
+        void entitiesPanel() const;
+        void statsPanel() const;
+        void getVersions();
 
     private:
-        static bool showInfo;
+        ImGuiIO& io;
+        ImGuiStyle& style = ImGui::GetStyle();
+        ImGuiWindowFlags windowFlags{};
+        bool showInfo{};
 };
 
 #endif
