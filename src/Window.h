@@ -11,21 +11,21 @@
 
 class Window {
     public:
+        Window();
         Window(const int& _width, const int& _height);
         ~Window();
         void initialized();
-        static bool isRunning();
-        void processInput();
-        void swapBuffers();
+        bool isRunning() const;
+        void swapBuffers() const;
         void render();
-        void destroy();
-
-        GLFWwindow* window{};
+        void destroy() const;
+        GLFWwindow* getWindow();
+        glm::vec2 getWindowSize();
 
     private:
-        static bool editorIsRunning;
+        GLFWwindow* window{};
         glm::vec2 windowSize;
-        int bufferWidth{}, buffetHeight{};
+        int bufferWidth{}, bufferHeight{};
         glm::vec4 windowColor{};
 };
 

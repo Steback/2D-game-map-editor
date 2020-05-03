@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include "../lib/glm/glm.hpp"
-
 #include "EditorUI.h"
 #include "Window.h"
 
@@ -98,7 +96,7 @@ void EditorUI::entitiesPanel() const {
     ImGui::Begin("Entities", nullptr, windowFlags);
 
     if( ImGui::Button("Add Entity") ) {
-        // TODO: Create Entities and Components
+        // TODO: Create Entities
 
     }
 

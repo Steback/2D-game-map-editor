@@ -12,8 +12,8 @@ class EditorUI {
         ~EditorUI();
         void initialized(GLFWwindow* _window);
         void renderUI();
-        void draw();
-        void destroy();
+        static void draw();
+        static void destroy();
         void mainMenuBar();
         void entitiesPanel() const;
         void statsPanel() const;
