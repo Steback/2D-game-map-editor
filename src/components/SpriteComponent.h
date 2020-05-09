@@ -3,13 +3,10 @@
 
 #include "../Component.h"
 
+
 class SpriteComponent : public Component {
     public:
         explicit SpriteComponent(const std::string& assetTextureID) {
-            setTexture(assetTextureID);
-        }
-
-        explicit SpriteComponent(const std::string& assetTextureID,  bool _isFixed) {
             setTexture(assetTextureID);
         }
 
@@ -20,6 +17,9 @@ class SpriteComponent : public Component {
         void render() override {
 
         }
+
+    private:
+        GLuint textureID;
 };
 
 #endif

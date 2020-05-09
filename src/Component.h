@@ -7,10 +7,8 @@ class Component {
     public:
         Entity* owner{};
         virtual ~Component() = default;
-        virtual void initialize() {  }
-        virtual void render() {  }
-
-    private:
+        virtual void initialize() = 0;
+        virtual void render() = 0;
 };
 
 #endif

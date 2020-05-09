@@ -84,7 +84,7 @@ void Shader::AddShader(GLuint _program, const std::string& _shaderCode, GLenum _
     glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
 
     if ( !result ) {
-        glGetShaderInfoLog(shaderID, sizeof(eLog), nullptr, eLog);
+        glGetShaderInfoLog(shader, sizeof(eLog), nullptr, eLog);
         std::cerr << "Error compiling " << _shaderType << " shader: " <<  eLog << std::endl;
         return ;
     }

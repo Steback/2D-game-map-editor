@@ -43,16 +43,6 @@ void EditorUI::renderUI() {
     ImGui::Render();
 }
 
-void EditorUI::draw() {
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void EditorUI::destroy() {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-}
-
 void EditorUI::mainMenuBar() {
     // Menu bar
     if ( ImGui::BeginMainMenuBar() ) {

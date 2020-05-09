@@ -18,6 +18,6 @@ set(EXECUTABLE_OUTPUT_PATH "..")
 set_target_properties(
         ${PROJECT_NAME}
         PROPERTIES
-        OUTPUT_NAME "${PROJECT_NAME}"
+        OUTPUT_NAME "Editor"
         SUFFIX ".o"
 )
