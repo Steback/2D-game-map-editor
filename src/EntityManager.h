@@ -12,7 +12,9 @@ class Entity;
 class EntityManager {
     public:
         ~EntityManager();
+        void update(float deltaTime);
         void render() const;
+        void destory();
         Entity& addEntity(const std::string& _entityName, LayerType _layer);
         std::vector<Entity*> getEntities() const;
         std::vector<Entity*> getEntitiesLayer(LayerType _layer) const;

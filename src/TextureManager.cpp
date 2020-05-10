@@ -29,6 +29,11 @@ void TextureManager::loadTexture(const std::string &_filePath) {
     stbi_image_free(imageData);
 }
 
+void TextureManager::useTexture() const {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+}
+
 GLuint& TextureManager::getTexture() { return textureID; }
 
 int TextureManager::getWidth() const { return width; }

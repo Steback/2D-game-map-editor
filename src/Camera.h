@@ -1,3 +1,6 @@
+#ifndef EDITOR_CAMERA_H
+#define EDITOR_CAMERA_H
+
 #include <GL/glew.h>
 
 #include "../lib/glm/glm.hpp"
@@ -16,3 +19,5 @@ class Camera {
         glm::mat4 projectionMatrix{};
         glm::vec3 cameraPos;
 };
+
+#endif

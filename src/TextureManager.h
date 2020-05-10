@@ -9,6 +9,7 @@ class TextureManager {
     public:
         explicit TextureManager(const std::string& _filePath);
         ~TextureManager();
+        void useTexture() const;
         GLuint& getTexture();
         int getWidth() const;
         int getHeight() const;

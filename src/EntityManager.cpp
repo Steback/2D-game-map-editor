@@ -1,12 +1,12 @@
 #include "EntityManager.h"
 #include "Entity.h"
 
-EntityManager::~EntityManager() {
-    for ( auto & entity : entities ) {
-        delete entity;
-    }
+EntityManager::~EntityManager() { destory(); }
 
-    entities.clear();
+void EntityManager::update(float deltaTime) {
+    for ( auto& entity : entities ) {
+        entity->update(deltaTime);
+    }
 }
 
 void EntityManager::render() const {
@@ -15,6 +15,14 @@ void EntityManager::render() const {
             entity->render();
         }
     }
+}
+
+void EntityManager::destory() {
+    for ( auto & entity : entities ) {
+        delete entity;
+    }
+
+    entities.clear();
 }
 
 Entity& EntityManager::addEntity(const std::string& _entityName, LayerType _layer) {

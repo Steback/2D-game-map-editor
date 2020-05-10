@@ -5,14 +5,22 @@ Entity::Entity(EntityManager& _manager) : manager(_manager) {  }
 
 Entity::Entity(EntityManager &_manager, std::string  _name, LayerType _layer) : manager(_manager), name(std::move( _name )), layer(_layer) {  }
 
-Entity::~Entity() {
+Entity::~Entity() { destroy(); }
+
+void Entity::update(float deltaTime) {
     for ( auto& component : components ) {
-        delete component;
+        component->update(deltaTime);
     }
 }
 
 void Entity::render() {
     for ( auto& component : components ) {
         component->render();
+    }
+}
+
+void Entity::destroy() {
+    for ( auto& component : components ) {
+        delete component;
     }
 }

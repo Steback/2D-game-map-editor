@@ -8,6 +8,7 @@ class Component {
         Entity* owner{};
         virtual ~Component() = default;
         virtual void initialize() = 0;
+        virtual void update(float deltaTime) = 0;
         virtual void render() = 0;
 };
 

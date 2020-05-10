@@ -1,20 +1,16 @@
 #include "Editor.h"
 
 int main(int, char**) {
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    auto* editor = new Editor;
 
-    Editor editor(io);
-
-    editor.initialized();
+    editor->initialized();
 
     // Main loop
-    while ( !editor.isRunning() ) {
-        editor.render();
+    while ( !editor->isRunning() ) {
+        editor->render();
     }
 
-    editor.destory();
+    editor->destory();
 
     return 0;
 }
