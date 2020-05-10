@@ -12,6 +12,7 @@ class Entity;
 class EntityManager {
     public:
         ~EntityManager();
+        void initialize();
         void update(float deltaTime);
         void render() const;
         void destory();

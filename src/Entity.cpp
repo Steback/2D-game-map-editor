@@ -7,6 +7,12 @@ Entity::Entity(EntityManager &_manager, std::string  _name, LayerType _layer) : 
 
 Entity::~Entity() { destroy(); }
 
+void Entity::initialize() {
+    for ( auto& component : components ) {
+        component->initialize();
+    }
+}
+
 void Entity::update(float deltaTime) {
     for ( auto& component : components ) {
         component->update(deltaTime);

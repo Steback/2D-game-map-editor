@@ -3,6 +3,12 @@
 
 EntityManager::~EntityManager() { destory(); }
 
+void EntityManager::initialize() {
+    for ( auto& entity : entities ) {
+        entity->initialize();
+    }
+}
+
 void EntityManager::update(float deltaTime) {
     for ( auto& entity : entities ) {
         entity->update(deltaTime);
