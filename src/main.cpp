@@ -7,6 +7,7 @@ int main(int, char**) {
 
     // Main loop
     while ( !editor->isRunning() ) {
+        editor->update();
         editor->render();
     }
 

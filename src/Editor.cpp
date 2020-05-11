@@ -34,7 +34,7 @@ void Editor::initialized() {
     ui->initialized(window->getWindow());
 
     camera = new Camera(90.0f, window->getWindowSize().x, window->getWindowSize().y, 0.1f, 100.0f,
-            glm::vec3(0.0f, 0.0f, 20.0f));
+            glm::vec3(0.0f, 0.0f, 100.0f));
 
     entityManaer = new EntityManager;
     assetsManager = new AssetsManager;
@@ -58,7 +58,7 @@ void Editor::initialized() {
     mesh.push_back(mesh1);
 
     Entity& entity = entityManaer->addEntity("chopper", PLAYER_LAYER);
-    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.5f, 1.5f, 0.0f),
+    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.5f, 2.5f, 0.0f),
             0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
     entityManaer->initialize();
@@ -71,6 +71,8 @@ void Editor::update() {
     deltaTime = now - lastTime;
     lastTime = now;
 
+    shaders[0]->UseShader();
+
     entityManaer->update(deltaTime);
 }
 
@@ -80,10 +82,6 @@ void Editor::render() {
 
     window->render();
     ui->renderUI();
-
-    shaders[0]->UseShader();
-
-    update();
 
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
