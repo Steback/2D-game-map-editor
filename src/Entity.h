@@ -6,6 +6,7 @@
 
 #include "Constants.h"
 #include "components/TransformComponent.h"
+#include "components/SpriteComponent.h"
 
 class EntityManager;
 class Component;

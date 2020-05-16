@@ -11,10 +11,9 @@
 #include "EntityManager.h"
 #include "AssetsManager.h"
 
-
 // TODO: Statics objects
-AssetsManager* Editor::assetsManager;
-EntityManager* Editor::entityManaer;
+std::unique_ptr<AssetsManager> Editor::assetsManager;
+std::unique_ptr<EntityManager> Editor::entityManager;
 std::vector<Shader*> Editor::shaders;
 std::vector<Mesh*> Editor::mesh;
 
@@ -30,14 +29,13 @@ void Editor::initialized() {
 
     window->initialized();
 
-    ui = new EditorUI(io);
+    ui = std::make_unique<EditorUI>(io);
     ui->initialized(window->getWindow());
 
-    camera = new Camera(90.0f, window->getWindowSize().x, window->getWindowSize().y, 0.1f, 100.0f,
-            glm::vec3(0.0f, 0.0f, 100.0f));
+    camera = std::make_unique<Camera>(90.0f, window->getWindowSize().x, window->getWindowSize().y, 0.1f, 100.0f, glm::vec3(0.0f, 0.0f, 100.0f));
 
-    entityManaer = new EntityManager;
-    assetsManager = new AssetsManager;
+    entityManager = std::make_unique<EntityManager>();
+    assetsManager = std::make_unique<AssetsManager>();
 
     std::vector<Shape> vertices {
             { -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f,},
@@ -57,11 +55,14 @@ void Editor::initialized() {
     Mesh* mesh1 = new Mesh(vertices, indices);
     mesh.push_back(mesh1);
 
-    Entity& entity = entityManaer->addEntity("chopper", PLAYER_LAYER);
+    assetsManager->addTexture("chopper", "assets/images/chopper-sinngle.png");
+
+    Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
+    entity.addComponent<SpriteComponent>("chopper");
     entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.5f, 2.5f, 0.0f),
             0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-    entityManaer->initialize();
+    entityManager->initialize();
 }
 
 bool Editor::isRunning() { return window->isRunning(); }
@@ -73,7 +74,7 @@ void Editor::update() {
 
     shaders[0]->UseShader();
 
-    entityManaer->update(deltaTime);
+    entityManager->update(deltaTime);
 }
 
 void Editor::render() {
@@ -86,7 +87,7 @@ void Editor::render() {
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
 
-    entityManaer->render();
+    entityManager->render();
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     window->swapBuffers();
@@ -105,10 +106,4 @@ void Editor::destory() {
     for ( auto& m : mesh ) {
         delete m;
     }
-
-    delete window;
-    delete ui;
-    delete camera;
-    delete entityManaer;
-    delete assetsManager;
 }

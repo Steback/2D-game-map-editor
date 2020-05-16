@@ -7,8 +7,9 @@
 
 class TextureManager {
     public:
-        explicit TextureManager(const std::string& _filePath);
+        explicit TextureManager(std::string  _filePath);
         ~TextureManager();
+        bool loadTexture();
         void useTexture() const;
         GLuint& getTexture();
         int getWidth() const;
@@ -19,8 +20,7 @@ class TextureManager {
         int width{};
         int height{};
         GLuint textureID{};
-
-        void loadTexture(const std::string& _filePath);
+        std::string filePath;
 };
 
 #endif

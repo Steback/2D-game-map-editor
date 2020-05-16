@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <vector>
+#include <memory>
 
 // OpenGL loader
 #include <GL/glew.h>
@@ -19,7 +20,7 @@ class EntityManager;
 
 class Editor {
     public:
-        explicit Editor();
+        Editor();
         ~Editor();
         void initialized();
         bool isRunning();
@@ -27,15 +28,15 @@ class Editor {
         void render();
         void destory();
 
-        static AssetsManager* assetsManager;
-        static EntityManager* entityManaer;
+        static std::unique_ptr<AssetsManager> assetsManager;
+        static std::unique_ptr<EntityManager> entityManager;
         static std::vector<Shader*> shaders;
         static std::vector<Mesh*> mesh;
 
     private:
-        Window* window;
-        EditorUI* ui{};
-        Camera* camera{};
+        std::unique_ptr<Window> window;
+        std::unique_ptr<EditorUI> ui{};
+        std::unique_ptr<Camera> camera{};
         GLfloat deltaTime = 0.0f;
         GLfloat lastTime = 0.0f;
 };

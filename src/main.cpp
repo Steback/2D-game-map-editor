@@ -1,7 +1,7 @@
 #include "Editor.h"
 
 int main(int, char**) {
-    auto* editor = new Editor;
+    std::unique_ptr<Editor> editor = std::make_unique<Editor>();
 
     editor->initialized();
 
