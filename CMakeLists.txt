@@ -8,12 +8,18 @@ find_library(glfw REQUIRED)
 find_library(OpenGL REQUIRED)
 
 file(GLOB SOURCE_FILES ./src/*.cpp )
-file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
+
+# Dear ImGui
+file(GLOB IMGUI_SOURCE ./lib/imgui/ImGui/*.cpp )
+include_directories( ${PROJECT_SOURCE_DIR}/lib/imgui/ )
+
+# stb_image
+include_directories( ${PROJECT_SOURCE_DIR}/lib/stb/ )
 
 add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE} )
 target_link_libraries( ${PROJECT_NAME} glfw GLEW OpenGL )
 
-set(EXECUTABLE_OUTPUT_PATH "..")
+set( EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR} )
 
 set_target_properties(
         ${PROJECT_NAME}
