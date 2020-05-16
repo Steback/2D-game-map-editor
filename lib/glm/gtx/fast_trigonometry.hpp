@@ -13,7 +13,7 @@
 #pragma once
 
 // Dependency:
-#include "../gtc/constants.hpp"
+#include "glm/gtc/constants.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

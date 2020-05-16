@@ -1,6 +1,6 @@
 #pragma once
 
-#include "detail/qualifier.hpp"
+#include "glm/detail/qualifier.hpp"
 
 namespace glm
 {

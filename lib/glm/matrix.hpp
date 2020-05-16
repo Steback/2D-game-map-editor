@@ -13,8 +13,8 @@
 #pragma once
 
 // Dependencies
-#include "detail/qualifier.hpp"
-#include "detail/setup.hpp"
+#include "glm/detail/qualifier.hpp"
+#include "glm/detail/setup.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
 #include "vec4.hpp"
@@ -158,4 +158,4 @@ namespace detail
 	/// @}
 }//namespace glm
 
-#include "detail/func_matrix.inl"
+#include "glm/detail/func_matrix.inl"

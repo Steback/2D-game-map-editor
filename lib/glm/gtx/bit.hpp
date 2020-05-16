@@ -13,7 +13,7 @@
 #pragma once
 
 // Dependencies
-#include "../gtc/bitfield.hpp"
+#include "glm/gtc/bitfield.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

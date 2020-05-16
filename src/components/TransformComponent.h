@@ -2,7 +2,7 @@
 #define TRANSFORM_COMPONENT_H
 
 #include "../EntityManager.h"
-#include "../../lib/glm/glm.hpp"
+#include "glm/glm.hpp"
 #include "../../lib/glm/gtc/type_ptr.hpp"
 #include "../../lib/glm/gtc/matrix_transform.hpp"
 

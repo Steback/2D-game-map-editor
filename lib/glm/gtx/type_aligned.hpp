@@ -14,8 +14,8 @@
 #pragma once
 
 // Dependency:
-#include "../gtc/type_precision.hpp"
-#include "../gtc/quaternion.hpp"
+#include "glm/gtc/type_precision.hpp"
+#include "glm/gtc/quaternion.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

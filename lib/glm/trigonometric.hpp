@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "detail/setup.hpp"
-#include "detail/qualifier.hpp"
+#include "glm/detail/setup.hpp"
+#include "glm/detail/qualifier.hpp"
 
 namespace glm
 {
@@ -207,4 +207,4 @@ namespace glm
 	/// @}
 }//namespace glm
 
-#include "detail/func_trigonometric.inl"
+#include "glm/detail/func_trigonometric.inl"

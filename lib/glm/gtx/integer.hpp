@@ -13,8 +13,8 @@
 #pragma once
 
 // Dependency:
-#include "../glm.hpp"
-#include "../gtc/integer.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/integer.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "detail/type_vec3.hpp"
+#include "glm/detail/type_vec3.hpp"
 
 namespace glm
 {
@@ -113,4 +113,4 @@ namespace glm
 	/// @}
 }//namespace glm
 
-#include "detail/func_geometric.inl"
+#include "glm/detail/func_geometric.inl"

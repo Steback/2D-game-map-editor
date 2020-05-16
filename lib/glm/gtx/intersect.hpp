@@ -16,10 +16,10 @@
 // Dependency:
 #include <cfloat>
 #include <limits>
-#include "../glm.hpp"
-#include "../geometric.hpp"
-#include "../gtx/closest_point.hpp"
-#include "../gtx/vector_query.hpp"
+#include "glm/glm.hpp"
+#include "glm/geometric.hpp"
+#include "closest_point.hpp"
+#include "vector_query.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

@@ -21,9 +21,9 @@
 #endif
 
 // Dependency:
-#include "../detail/qualifier.hpp"
-#include "../gtc/quaternion.hpp"
-#include "../gtx/dual_quaternion.hpp"
+#include "glm/detail/qualifier.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "dual_quaternion.hpp"
 
 namespace glm
 {

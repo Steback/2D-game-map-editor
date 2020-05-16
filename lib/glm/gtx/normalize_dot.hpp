@@ -14,7 +14,7 @@
 #pragma once
 
 // Dependency:
-#include "../gtx/fast_square_root.hpp"
+#include "fast_square_root.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

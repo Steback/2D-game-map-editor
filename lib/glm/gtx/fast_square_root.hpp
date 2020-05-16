@@ -15,9 +15,9 @@
 #pragma once
 
 // Dependency:
-#include "../common.hpp"
-#include "../exponential.hpp"
-#include "../geometric.hpp"
+#include "glm/common.hpp"
+#include "glm/exponential.hpp"
+#include "glm/geometric.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

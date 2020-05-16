@@ -1,6 +1,6 @@
 /// @ref gtc_ulp
 
-#include "../ext/scalar_ulp.hpp"
+#include "glm/ext/scalar_ulp.hpp"
 
 namespace glm
 {

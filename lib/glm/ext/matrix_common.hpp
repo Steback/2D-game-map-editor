@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "../detail/qualifier.hpp"
-#include "../detail/_fixes.hpp"
+#include "glm/detail/qualifier.hpp"
+#include "glm/detail/_fixes.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	pragma message("GLM: GLM_EXT_matrix_transform extension included")

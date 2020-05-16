@@ -1,7 +1,7 @@
 /// @ref gtc_round
 
-#include "../integer.hpp"
-#include "../ext/vector_integer.hpp"
+#include "glm/integer.hpp"
+#include "glm/ext/vector_integer.hpp"
 
 namespace glm{
 namespace detail

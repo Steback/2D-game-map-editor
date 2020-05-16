@@ -14,11 +14,11 @@
 #pragma once
 
 // Dependency:
-#include "../glm.hpp"
-#include "../gtc/constants.hpp"
-#include "../gtc/quaternion.hpp"
-#include "../ext/quaternion_exponential.hpp"
-#include "../gtx/norm.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/constants.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/ext/quaternion_exponential.hpp"
+#include "norm.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

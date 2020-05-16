@@ -14,8 +14,8 @@
 #pragma once
 
 // Dependency:
-#include "../mat3x3.hpp"
-#include "../vec2.hpp"
+#include "glm/mat3x3.hpp"
+#include "glm/vec2.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

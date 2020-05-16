@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "detail/qualifier.hpp"
+#include "glm/detail/qualifier.hpp"
 #include "common.hpp"
 #include "vector_relational.hpp"
 
@@ -209,4 +209,4 @@ namespace glm
 	/// @}
 }//namespace glm
 
-#include "detail/func_integer.inl"
+#include "glm/detail/func_integer.inl"

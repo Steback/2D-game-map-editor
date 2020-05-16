@@ -13,7 +13,7 @@
 #pragma once
 
 // Dependency:
-#include "../geometric.hpp"
+#include "glm/geometric.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL

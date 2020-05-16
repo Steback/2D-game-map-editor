@@ -1,5 +1,5 @@
-#include "../lib/glm/glm.hpp"
-#include "../lib/glm/gtc/type_ptr.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "Editor.h"
 #include "Window.h"

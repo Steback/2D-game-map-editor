@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "detail/qualifier.hpp"
-#include "detail/_fixes.hpp"
+#include "glm/detail/qualifier.hpp"
+#include "glm/detail/_fixes.hpp"
 
 namespace glm
 {
@@ -535,5 +535,5 @@ namespace glm
 	/// @}
 }//namespace glm
 
-#include "detail/func_common.inl"
+#include "glm/detail/func_common.inl"
 

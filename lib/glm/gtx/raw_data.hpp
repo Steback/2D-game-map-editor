@@ -13,8 +13,8 @@
 #pragma once
 
 // Dependencies
-#include "../ext/scalar_uint_sized.hpp"
-#include "../detail/setup.hpp"
+#include "glm/ext/scalar_uint_sized.hpp"
+#include "glm/detail/setup.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL
