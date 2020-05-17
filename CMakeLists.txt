@@ -7,7 +7,7 @@ find_library(GLEW REQUIRED)
 find_library(glfw REQUIRED)
 find_library(OpenGL REQUIRED)
 
-file(GLOB SOURCE_FILES ./src/*.cpp )
+file(GLOB SOURCE_FILES ./src/*.cpp)
 
 # Dear ImGui source files
 file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )

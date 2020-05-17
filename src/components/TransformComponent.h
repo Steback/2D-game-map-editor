@@ -1,11 +1,11 @@
 #ifndef TRANSFORM_COMPONENT_H
 #define TRANSFORM_COMPONENT_H
 
-#include "../EntityManager.h"
 #include "glm/glm.hpp"
-#include "../../lib/glm/gtc/type_ptr.hpp"
-#include "../../lib/glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
+#include "../EntityManager.h"
 #include "../Shader.h"
 #include "../Camera.h"
 #include "../Mesh.h"

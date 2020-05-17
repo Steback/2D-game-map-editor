@@ -7,8 +7,8 @@
 
 struct Shape {
     glm::vec3 pos;
-    glm::vec3 color;
-    Shape(float _x, float _y, float _z, float _red, float _green, float _blue) : pos(glm::vec3(_x, _y, _z)), color(_red, _green, _blue) {  }
+    glm::vec2 texCoord;
+    Shape(const glm::vec3& _pos, const glm::vec2& _texCoord) : pos(_pos), texCoord(_texCoord) {  }
 };
 
 class Mesh {

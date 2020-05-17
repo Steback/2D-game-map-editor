@@ -38,10 +38,10 @@ void Editor::initialized() {
     assetsManager = std::make_unique<AssetsManager>();
 
     std::vector<Shape> vertices {
-            { -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f,},
-            { -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, },
-            { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, },
-            { 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f },
+            { glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f) },
+            { glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.1f) },
+            { glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f) },
+            { glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f) },
     };
 
     std::vector<GLuint> indices{
@@ -59,7 +59,7 @@ void Editor::initialized() {
 
     Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
     entity.addComponent<SpriteComponent>("chopper");
-    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.5f, 2.5f, 0.0f),
+    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 0.0f),
             0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
     entityManager->initialize();
@@ -86,7 +86,6 @@ void Editor::render() {
 
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
-
     entityManager->render();
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
