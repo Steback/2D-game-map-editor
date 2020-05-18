@@ -17,7 +17,7 @@ class SpriteComponent : public Component {
         void render() override { texture->useTexture(); }
 
     private:
-        TextureManager* texture{};
+        std::shared_ptr<TextureManager> texture{};
 
 };
 

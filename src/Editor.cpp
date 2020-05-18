@@ -32,7 +32,7 @@ void Editor::initialized() {
     ui = std::make_unique<EditorUI>(io);
     ui->initialized(window->getWindow());
 
-    camera = std::make_unique<Camera>(90.0f, window->getWindowSize().x, window->getWindowSize().y, 0.1f, 100.0f, glm::vec3(0.0f, 0.0f, 100.0f));
+    camera = std::make_unique<Camera>(-90.0f, window->getWindowSize().x, window->getWindowSize().y, 0.1f, 100.0f, glm::vec3(0.0f, 0.0f, 20.0f));
 
     entityManager = std::make_unique<EntityManager>();
     assetsManager = std::make_unique<AssetsManager>();
@@ -45,8 +45,8 @@ void Editor::initialized() {
     };
 
     std::vector<GLuint> indices{
-            0, 2, 1,
-            0, 1, 3
+            1, 3, 2,
+            0, 3, 2
     };
 
     auto* shader = new Shader("shaders/vertexShader.vert", "shaders/fragmentShader.frag");
@@ -59,7 +59,7 @@ void Editor::initialized() {
 
     Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
     entity.addComponent<SpriteComponent>("chopper");
-    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 0.0f),
+    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.5f, 1.5f, 0.0f),
             0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
     entityManager->initialize();

@@ -2,6 +2,7 @@
 #define ASSETSMANAGER_H
 
 #include <map>
+#include <memory>
 
 #include "TextureManager.h"
 
@@ -10,10 +11,10 @@ class AssetsManager {
         AssetsManager();
         ~AssetsManager();
         void addTexture(const std::string& _texutreID, const std::string& _filePath);
-        TextureManager* getTexture(const std::string& _texutreID);
+        std::shared_ptr<TextureManager> getTexture(const std::string& _texutreID);
 
     private:
-        std::map<std::string, TextureManager*> textures;
+        std::map<std::string, std::shared_ptr<TextureManager> > textures;
 };
 
 #endif
