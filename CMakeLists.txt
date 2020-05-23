@@ -3,8 +3,6 @@ project(2D_Game_Map_Editor)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_library(GLEW REQUIRED)
-find_library(glfw REQUIRED)
 find_library(OpenGL REQUIRED)
 
 file(GLOB SOURCE_FILES ./src/*.cpp)
@@ -12,11 +10,20 @@ file(GLOB SOURCE_FILES ./src/*.cpp)
 # Dear ImGui source files
 file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
 
-# Include libs
-include_directories( ${PROJECT_SOURCE_DIR}/lib/ )
+include_directories(
+        ${PROJECT_SOURCE_DIR}/lib/stb
+        ${PROJECT_SOURCE_DIR}/lib/imgui
+)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/glfw )
+
+add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/glm )
 
 add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE} )
-target_link_libraries( ${PROJECT_NAME} glfw GLEW OpenGL )
+target_link_libraries( ${PROJECT_NAME} OpenGL GLEW glfw glm )
 
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR} )
 
@@ -24,5 +31,4 @@ set_target_properties(
         ${PROJECT_NAME}
         PROPERTIES
         OUTPUT_NAME "Editor"
-        SUFFIX ".o"
 )

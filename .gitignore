@@ -10,3 +10,6 @@ cmake-build-debug/
 
 # ImGui
 *.ini
+
+# Editor
+Editor
