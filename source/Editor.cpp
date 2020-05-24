@@ -40,9 +40,9 @@ void Editor::initialized() {
 
     std::vector<Shape> vertices {
             { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
-            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
+            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f / 10.0f, 1.0f / 3.0f) },
+            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0f / 3.0f) },
+            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f / 10.0f, 0.0f) },
     };
 
     std::vector<GLuint> indices{
@@ -64,7 +64,7 @@ void Editor::initialized() {
 
     Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
     entity.addComponent<SpriteComponent>("tileMap");
-    entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(5.0f, 3.0f), 0, glm::vec2(0.0f, 0.0f));
+    entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.5f, 2.5f), 0, glm::vec2(0.0f, 0.0f));
 
     entityManager->initialize();
 }
