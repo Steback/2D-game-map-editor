@@ -10,6 +10,7 @@
 #include "Entity.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"
+#include "Map.h"
 
 // TODO: Statics objects
 std::unique_ptr<AssetsManager> Editor::assetsManager;
@@ -38,10 +39,10 @@ void Editor::initialized() {
     assetsManager = std::make_unique<AssetsManager>();
 
     std::vector<Shape> vertices {
-            { glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f) },
-            { glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f) },
-            { glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f) },
-            { glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f) },
+            { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
+            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
     };
 
     std::vector<GLuint> indices{
@@ -56,11 +57,14 @@ void Editor::initialized() {
     mesh.push_back(mesh1);
 
     assetsManager->addTexture("chopper", "assets/images/chopper-sinngle.png");
+    assetsManager->addTexture("tileMap", "assets/tilemaps/jungle.png");
+
+//    map = std::make_unique<Map>("tileMap");
+//    map->loadMap("assets/tilemaps/jungle.map", glm::vec2(25.0f, 28.0f));
 
     Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
-    entity.addComponent<SpriteComponent>("chopper");
-    entity.addComponent<TransformComponent>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.5f, 1.5f, 0.0f),
-            0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+    entity.addComponent<SpriteComponent>("tileMap");
+    entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(5.0f, 3.0f), 0, glm::vec2(0.0f, 0.0f));
 
     entityManager->initialize();
 }

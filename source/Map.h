@@ -1,22 +1,23 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "glm/glm.hpp"
+
 #include <string>
 #include <vector>
-#include "EntityManager.h"
+
+class Entity;
 
 class Map {
+    public:
+        explicit Map(std::string _textureID);
+        ~Map();
+        void loadMap(const std::string& _filePath, const glm::vec2& _mapSize);
+        void addTile(const glm::vec3& _tilePosition, const glm::vec3& _position);
+
     private:
         std::string textureID;
-        int scale;
-        int tilesize;
         std::vector<Entity> tilemap;
-
-    public:
-        Map(std::string _textureID, int _scale, int _tileSize);
-        ~Map();
-        void loadMap(const std::string& _filePath, int _mapSizeX, int _mapSizeY);
-        void addTile(int _sourceRectX, int _sourceRectY, int _x, int _y);
 };
 
 #endif

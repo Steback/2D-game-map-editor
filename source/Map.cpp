@@ -1,43 +1,42 @@
-#include "Map.h"
-#include "Game.h"
-#include "components/TileComponent.h"
 #include <fstream>
+#include <utility>
 
-extern EntityManager manager;
+#include "Map.h"
+#include "Editor.h"
+#include "Entity.h"
+#include "components/TileComponent.h"
 
-Map::Map(std::string _textureID, int _scale, int _tileSize) {
-    textureID = std::move(_textureID);
-    scale = _scale;
-    tilesize = _tileSize;
-}
+Map::Map(std::string _textureID)
+    : textureID(std::move(_textureID)) {  }
 
 Map::~Map() = default;
 
-void Map::loadMap(const std::string& _filePath, int _mapSizeX, int _mapSizeY) {
+void Map::loadMap(const std::string& _filePath, const glm::vec2& _mapSize) {
     std::fstream mapFile;
     mapFile.open(_filePath);
 
-    for ( int y = 0; y < _mapSizeY; y++ ) {
-        for ( int x = 0; x < _mapSizeX; x++ ) {
+    for ( int y = 0; y < static_cast<int>(_mapSize.y); y++ ) {
+        for ( int x = 0; x < static_cast<int>(_mapSize.x); x++ ) {
             char ch;
+            glm::vec3 source;
 
             mapFile.get(ch);
-            int sourceRectY = atoi(&ch) * tilesize;
+            source.y = atoi(&ch);
+            std::cout << source.y << ' ';
 
             mapFile.get(ch);
-            int sourceRectX = atoi(&ch) * tilesize;
-
-            addTile(sourceRectX, sourceRectY, x * (scale * tilesize), y * (scale * tilesize));
+            source.x = atoi(&ch);
+            std::cout << source.x << ' ';
 
             mapFile.ignore();
         }
+
+        std::cout << '\n';
     }
 
     mapFile.close();
 }
 
-void Map::addTile(int _sourceRectX, int _sourceRectY, int _x, int _y) {
-    Entity& newTile(manager.addEntity("Tile", TILEMAP_LAYER));
-    newTile.addComponent<TileComponent>(_sourceRectX, _sourceRectY, _x, _y, tilesize, scale, textureID);
-    tilemap.emplace_back(newTile);
+void Map::addTile(const glm::vec3& _tilePosition, const glm::vec3& _position) {
+
 }

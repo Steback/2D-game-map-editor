@@ -6,9 +6,9 @@
 #include "glm/glm.hpp"
 
 struct Shape {
-    glm::vec3 pos;
+    glm::vec2 position;
     glm::vec2 texCoord;
-    Shape(const glm::vec3& _pos, const glm::vec2& _texCoord) : pos(_pos), texCoord(_texCoord) {  }
+    Shape(const glm::vec2& _pos, const glm::vec2& _texCoord) : position(_pos), texCoord(_texCoord) {  }
 };
 
 class Mesh {

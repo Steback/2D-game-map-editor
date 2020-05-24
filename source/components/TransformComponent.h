@@ -13,13 +13,19 @@
 
 class TransformComponent : public Component {
     public:
-        TransformComponent(const glm::vec3& _translate, const glm::vec3& _scale, GLfloat _angle, const glm::vec3& _rotate)
+        glm::mat4 model;
+        glm::vec2 translate;
+        glm::vec2 scale;
+        glm::vec2 rotate;
+        float angle;
+
+        TransformComponent(const glm::vec2& _translate, const glm::vec2& _scale, float _angle, const glm::vec2& _rotate)
             : model(glm::mat4(1.0f)), translate(_translate), scale(_scale), angle(_angle), rotate(_rotate) {  }
 
         void initialize() override {
-            model = glm::translate(model, translate);
-            model = glm::scale(model, scale);
-            model = glm::rotate(model, angle, rotate);
+            model = glm::translate(model, glm::vec3(translate, 1.0f));
+            model = glm::scale(model, glm::vec3(scale, 1.0f));
+            model = glm::rotate(model, angle, glm::vec3(rotate, 1.0f));
         }
 
         void update(float deltaTime) override {
@@ -29,13 +35,6 @@ class TransformComponent : public Component {
         void render() override {
             Editor::mesh[0]->RenderMesh();
         }
-
-    private:
-        glm::mat4 model;
-        glm::vec3 translate;
-        glm::vec3 scale;
-        glm::vec3 rotate;
-        GLfloat angle;
 };
 
 #endif

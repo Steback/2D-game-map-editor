@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_library(OpenGL REQUIRED)
 
-file(GLOB SOURCE_FILES ./src/*.cpp)
+file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
 # Dear ImGui source files
-file(GLOB IMGUI_SOURCE ./lib/imgui/*.cpp )
+file(GLOB IMGUI_SOURCE ${PROJECT_SOURCE_DIR}/lib/imgui/*.cpp )
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/lib/stb
