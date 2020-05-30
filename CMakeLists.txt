@@ -4,6 +4,8 @@ project(2D_Game_Map_Editor)
 set(CMAKE_CXX_STANDARD 20)
 
 find_library(OpenGL REQUIRED)
+find_library(GLEW REQUIRED)
+find_library(glfw REQUIRED)
 
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
@@ -14,11 +16,6 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/lib/stb
         ${PROJECT_SOURCE_DIR}/lib/imgui
 )
-
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/glfw )
 
 add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/glm )
 
