@@ -1,7 +1,9 @@
 #include <iostream>
 
 #include "EditorUI.h"
-#include "Window.h"
+#include "Editor.h"
+#include "EntityManager.h"
+#include "Entity.h"
 
 EditorUI::EditorUI(ImGuiIO& _io) : io(_io) {  }
 
@@ -93,6 +95,7 @@ void EditorUI::entitiesPanel() const {
 void EditorUI::statsPanel() const {
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+
     ImGui::Begin("Stats", nullptr, windowFlags);
 
     ImGui::End();

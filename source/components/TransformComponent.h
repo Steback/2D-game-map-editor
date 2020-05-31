@@ -33,7 +33,7 @@ class TransformComponent : public Component {
         }
 
         void render() override {
-            Editor::mesh[0]->RenderMesh();
+
         }
 };
 

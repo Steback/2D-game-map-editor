@@ -1,5 +1,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "tinyxml2.h"
 
 #include "Editor.h"
 #include "Window.h"
@@ -55,19 +56,24 @@ void Editor::initialized() {
     Mesh* mesh1 = new Mesh(vertices, indices);
     mesh.push_back(mesh1);
 
-    assetsManager->addTexture("chopper", "assets/images/chopper-sinngle.png");
-    assetsManager->addTexture("tileMap", "assets/tilemaps/jungle.png");
+    tinyxml2::XMLDocument tileMap;
 
-    for ( int i = 0; i < 3; i++ ) {
-        for ( int j = 0; j < 10; j++ ) {
-            Entity& entity = entityManager->addEntity("Tile-" + std::to_string(i) + std::to_string(j), TILEMAP_LAYER);
-            entity.addComponent<MeshComponent>(std::vector<Shape> {
-                    { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-                    { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-                    { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
-                    { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-            }, indices);
-        }
+    tinyxml2::XMLError error = tileMap.LoadFile("assets/tilemap.xml");
+
+    if ( error != tinyxml2::XML_SUCCESS ) {
+        std::cerr << "Error loading XML file: assets/tilemap.xml" << '\n';
+    }
+    
+    tinyxml2::XMLNode* elem = tileMap.RootElement()->FirstChild();
+
+    while ( elem != nullptr ) {
+        assetsManager->addTexture( elem->FirstChildElement("name")->FirstChild()->Value(),
+                elem->FirstChildElement("path")->FirstChild()->Value() );
+
+        std::cout << elem->FirstChildElement("name")->FirstChild()->Value() << '\n';
+        std::cout << elem->FirstChildElement("path")->FirstChild()->Value() << '\n';
+
+        elem = elem->NextSibling();
     }
 
     entityManager->initialize();

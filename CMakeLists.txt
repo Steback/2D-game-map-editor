@@ -18,9 +18,10 @@ include_directories(
 )
 
 add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/glm )
+add_subdirectory( ${PROJECT_SOURCE_DIR}/lib/tinyxml2 )
 
 add_executable( ${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE} )
-target_link_libraries( ${PROJECT_NAME} OpenGL GLEW glfw glm )
+target_link_libraries( ${PROJECT_NAME} OpenGL GLEW glfw glm tinyxml2 )
 
 set( EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR} )
 
