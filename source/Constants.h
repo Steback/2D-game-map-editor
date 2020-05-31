@@ -7,7 +7,7 @@ const unsigned int WINDOW_HEIGHT = 720;
 const unsigned int NUM_LAYERS = 7;
 
 enum LayerType {
-    TILEMAP_LAYER= 0,
+    TILEMAP_LAYER = 0,
     VEGETATION_LAYER = 1,
     ENEMY_LAYER = 2,
     OBSTACLE_LAYER = 3,

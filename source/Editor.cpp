@@ -10,7 +10,6 @@
 #include "Entity.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"
-#include "Map.h"
 
 // TODO: Statics objects
 std::unique_ptr<AssetsManager> Editor::assetsManager;
@@ -40,9 +39,9 @@ void Editor::initialized() {
 
     std::vector<Shape> vertices {
             { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f / 10.0f, 1.0f / 3.0f) },
-            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0f / 3.0f) },
-            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f / 10.0f, 0.0f) },
+            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
+            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
+            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
     };
 
     std::vector<GLuint> indices{
@@ -59,12 +58,17 @@ void Editor::initialized() {
     assetsManager->addTexture("chopper", "assets/images/chopper-sinngle.png");
     assetsManager->addTexture("tileMap", "assets/tilemaps/jungle.png");
 
-//    map = std::make_unique<Map>("tileMap");
-//    map->loadMap("assets/tilemaps/jungle.map", glm::vec2(25.0f, 28.0f));
-
-    Entity& entity = entityManager->addEntity("chopper", PLAYER_LAYER);
-    entity.addComponent<SpriteComponent>("tileMap");
-    entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.5f, 2.5f), 0, glm::vec2(0.0f, 0.0f));
+    for ( int i = 0; i < 3; i++ ) {
+        for ( int j = 0; j < 10; j++ ) {
+            Entity& entity = entityManager->addEntity("Tile-" + std::to_string(i) + std::to_string(j), TILEMAP_LAYER);
+            entity.addComponent<MeshComponent>(std::vector<Shape> {
+                    { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+                    { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
+                    { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
+                    { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
+            }, indices);
+        }
+    }
 
     entityManager->initialize();
 }
@@ -82,7 +86,7 @@ void Editor::update() {
 }
 
 void Editor::render() {
-    // This function processes only those events that are already in the event queue and then returns immediately.
+
     glfwPollEvents();
 
     window->render();

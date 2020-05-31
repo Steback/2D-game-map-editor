@@ -17,7 +17,6 @@ class Mesh;
 class Shader;
 class AssetsManager;
 class EntityManager;
-class Map;
 
 class Editor {
     public:
@@ -38,7 +37,6 @@ class Editor {
         std::unique_ptr<Window> window;
         std::unique_ptr<EditorUI> ui{};
         std::unique_ptr<Camera> camera{};
-        std::unique_ptr<Map> map{};
         GLfloat deltaTime = 0.0f;
         GLfloat lastTime = 0.0f;
 };

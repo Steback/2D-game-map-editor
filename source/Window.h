@@ -1,12 +1,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-// OpenGL loader
 #include <GL/glew.h>
-
-// Include glfw3.h after our OpenGL definitions
 #include "GLFW/glfw3.h"
-
 #include "glm/glm.hpp"
 
 class Window {
