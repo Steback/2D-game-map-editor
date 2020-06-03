@@ -26,7 +26,7 @@ class Editor {
         bool isRunning();
         void update();
         void render();
-        void destory();
+        void destroy();
 
         static std::unique_ptr<AssetsManager> assetsManager;
         static std::unique_ptr<EntityManager> entityManager;

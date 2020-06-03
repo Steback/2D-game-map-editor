@@ -1,5 +1,5 @@
-#ifndef EDITOR_CAMERA_H
-#define EDITOR_CAMERA_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <GL/glew.h>
 

@@ -11,7 +11,7 @@ int main(int, char**) {
         editor->render();
     }
 
-    editor->destory();
+    editor->destroy();
 
     return 0;
 }

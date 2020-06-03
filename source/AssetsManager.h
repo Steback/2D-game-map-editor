@@ -1,5 +1,5 @@
-#ifndef ASSETSMANAGER_H
-#define ASSETSMANAGER_H
+#ifndef ASSETS_MANAGER_H
+#define ASSETS_MANAGER_H
 
 #include <map>
 #include <memory>

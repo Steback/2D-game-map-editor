@@ -14,7 +14,7 @@ class EditorUI {
         void renderUI();
         void mainMenuBar();
         void entitiesPanel() const;
-        void statsPanel() const;
+        void tilesMapPanel() const;
         void getVersions();
 
     private:

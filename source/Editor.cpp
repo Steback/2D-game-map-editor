@@ -23,12 +23,12 @@ Editor::Editor() : window(new Window(WINDOW_WIDTH, WINDOW_HEIGHT)) {  }
 Editor::~Editor() = default;
 
 void Editor::initialized() {
+    window->initialized();
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    window->initialized();
 
     ui = std::make_unique<EditorUI>(io);
     ui->initialized(window->getWindow());
@@ -53,9 +53,6 @@ void Editor::initialized() {
     auto* shader = new Shader("shaders/vertexShader.vert", "shaders/fragmentShader.frag");
     shaders.push_back(shader);
 
-    Mesh* mesh1 = new Mesh(vertices, indices);
-    mesh.push_back(mesh1);
-
     tinyxml2::XMLDocument tileMap;
 
     tinyxml2::XMLError error = tileMap.LoadFile("assets/tilemap.xml");
@@ -64,16 +61,18 @@ void Editor::initialized() {
         std::cerr << "Error loading XML file: assets/tilemap.xml" << '\n';
     }
     
-    tinyxml2::XMLNode* elem = tileMap.RootElement()->FirstChild();
+    tinyxml2::XMLNode* tile = tileMap.RootElement()->FirstChild();
 
-    while ( elem != nullptr ) {
-        assetsManager->addTexture( elem->FirstChildElement("name")->FirstChild()->Value(),
-                elem->FirstChildElement("path")->FirstChild()->Value() );
+    while ( tile != nullptr ) {
+        assetsManager->addTexture( tile->FirstChildElement("name")->FirstChild()->Value(),
+                tile->FirstChildElement("path")->FirstChild()->Value() );
 
-        std::cout << elem->FirstChildElement("name")->FirstChild()->Value() << '\n';
-        std::cout << elem->FirstChildElement("path")->FirstChild()->Value() << '\n';
+        tile = tile->NextSibling();
+    }
 
-        elem = elem->NextSibling();
+    for ( int i = 0; i < 30; i++ ) {
+        Entity& entityTile = entityManager->addEntity("tile-" + std::to_string( i + ( 1 * 100 ) ), TILEMAP_LAYER);
+        entityTile.addComponent<SpriteComponent>("tile-" + std::to_string(i + 1));
     }
 
     entityManager->initialize();
@@ -106,7 +105,7 @@ void Editor::render() {
     window->swapBuffers();
 }
 
-void Editor::destory() {
+void Editor::destroy() {
     window->destroy();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

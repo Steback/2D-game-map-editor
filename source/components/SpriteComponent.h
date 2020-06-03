@@ -1,5 +1,5 @@
-#ifndef SPRITECOMPONENT_H
-#define SPRITECOMPONENT_H
+#ifndef SPRITE_COMPONENT_H
+#define SPRITE_COMPONENT_H
 
 #include "../Component.h"
 #include "../Editor.h"

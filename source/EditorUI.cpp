@@ -3,7 +3,7 @@
 #include "EditorUI.h"
 #include "Editor.h"
 #include "EntityManager.h"
-#include "Entity.h"
+#include "AssetsManager.h"
 
 EditorUI::EditorUI(ImGuiIO& _io) : io(_io) {  }
 
@@ -37,7 +37,7 @@ void EditorUI::renderUI() {
 
     mainMenuBar();
     entitiesPanel();
-    statsPanel();
+    tilesMapPanel();
 
     ImGui::Render();
 }
@@ -92,12 +92,17 @@ void EditorUI::entitiesPanel() const {
     ImGui::End();
 }
 
-void EditorUI::statsPanel() const {
+void EditorUI::tilesMapPanel() const {
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
 
     ImGui::Begin("Stats", nullptr, windowFlags);
+        for ( int i = 0; i < 30; i++ ) {
+            if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
+            ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture("tile-" + std::to_string(i + 1))->getTextureID(),
+                         ImVec2(60, 60));
+        }
     ImGui::End();
 }
 

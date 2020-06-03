@@ -1,5 +1,5 @@
-#ifndef TEXTUREMANAGER_H
-#define TEXTUREMANAGER_H
+#ifndef TEXTURE_MANAGER_H
+#define TEXTURE_MANAGER_H
 
 #include <string>
 
@@ -11,7 +11,7 @@ class TextureManager {
         ~TextureManager();
         bool loadTexture();
         void useTexture() const;
-        GLuint& getTexture();
+        GLuint getTextureID() const;
         int getWidth() const;
         int getHeight() const;
         void clearTexture();
