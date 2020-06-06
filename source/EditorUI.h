@@ -13,8 +13,8 @@ class EditorUI {
         void initialized(GLFWwindow* _window);
         void renderUI();
         void mainMenuBar();
-        void entitiesPanel() const;
-        void tilesMapPanel() const;
+        void entitiesPanel();
+        void tilesMapPanel();
         void getVersions();
 
     private:
@@ -22,6 +22,7 @@ class EditorUI {
         ImGuiStyle& style = ImGui::GetStyle();
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
+        bool createEntity{};
 };
 
 #endif

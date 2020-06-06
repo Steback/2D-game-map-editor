@@ -1,0 +1,14 @@
+<Images>
+    <Image>
+        <name>chopper-sinngle</name>
+        <path>assets/images/chopper-sinngle.png</path>
+    </Image>
+    <Image>
+        <name>tank-big</name>
+        <path>assets/images/tank-big-down.png</path>
+    </Image>
+    <Image>
+        <name>truck</name>
+        <path>assets/images/truck-down.png</path>
+    </Image>
+</Images>

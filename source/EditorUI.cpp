@@ -4,6 +4,7 @@
 #include "Editor.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"
+#include "Entity.h"
 
 EditorUI::EditorUI(ImGuiIO& _io) : io(_io) {  }
 
@@ -79,20 +80,98 @@ void EditorUI::mainMenuBar() {
     getVersions();
 }
 
-void EditorUI::entitiesPanel() const {
+void EditorUI::entitiesPanel() {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+
     ImGui::Begin("Entities", nullptr, windowFlags);
+        if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
-    if( ImGui::Button("Add Entity") ) {
-        // TODO: Create Entities
+        // Create Entities
+        if ( createEntity ) {
+            ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
 
-    }
+            ImGui::Begin("Create Entity", &createEntity, ImGuiWindowFlags_NoResize);
 
+            // Entity Name
+            static std::array<char, 30> entityName{};
+            ImGui::InputText("Entity Name", &entityName[0], entityName.size(), ImGuiInputTextFlags_AlwaysInsertMode);
+
+            // Entity Layer
+            std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
+            static int layerIndex = 0;
+            std::string currentLayer = layerTypes[layerIndex];
+
+            if ( ImGui::BeginCombo("Layer Type", &currentLayer[0]) ) {
+                for ( int i = 0; i < layerTypes.size(); i++ ) {
+                    const bool isSelected = ( layerIndex == i );
+
+                    if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
+                        layerIndex = i;
+                    }
+
+                    if ( isSelected )
+                        ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
+
+            // Entity Sprite
+            std::vector<std::string> assets = { "chopper-sinngle", "tank-big", "truck" };
+            static int assetIndex = 0;
+            std::string currentAsset = assets[assetIndex];
+
+            if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
+                for ( int i = 0; i < assets.size(); i++ ) {
+                    const bool isSelected = ( assetIndex == i );
+
+                    if ( ImGui::Selectable(&assets[i][0], isSelected ) ) {
+                        assetIndex = i;
+                    }
+
+                    ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(assets[i])->getTextureID(),
+                            ImVec2(60, 60));
+
+                    if ( isSelected )
+                        ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
+
+            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(currentAsset)->getTextureID(),
+                        ImVec2(60, 60) );
+
+            // Button
+            if ( ImGui::Button("Create") ) {
+                Entity& entity = Editor::entityManager->addEntity(entityName.data(), static_cast<LayerType>(layerIndex + 1));
+
+                entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, 2.0f),
+                                                        0.0f, glm::vec2(0.0f, 0.0f));
+
+                entity.addComponent<SpriteComponent>(currentAsset);
+
+                entity.addComponent<MeshComponent>( std::vector<Shape> {
+                        { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+                        { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
+                        { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
+                        { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
+                }, std::vector<GLuint> {
+                        1, 3, 2,
+                        0, 3, 2
+                } );
+
+                createEntity = !createEntity;
+            }
+
+            ImGui::End();
+        }
     ImGui::End();
 }
 
-void EditorUI::tilesMapPanel() const {
+void EditorUI::tilesMapPanel() {
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
 

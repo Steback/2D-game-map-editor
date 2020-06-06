@@ -38,41 +38,45 @@ void Editor::initialized() {
     entityManager = std::make_unique<EntityManager>();
     assetsManager = std::make_unique<AssetsManager>();
 
-    std::vector<Shape> vertices {
-            { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
-            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-    };
-
-    std::vector<GLuint> indices{
-            1, 3, 2,
-            0, 3, 2
-    };
-
     auto* shader = new Shader("shaders/vertexShader.vert", "shaders/fragmentShader.frag");
     shaders.push_back(shader);
 
-    tinyxml2::XMLDocument tileMap;
+    tinyxml2::XMLDocument assets;
 
-    tinyxml2::XMLError error = tileMap.LoadFile("assets/tilemap.xml");
-
-    if ( error != tinyxml2::XML_SUCCESS ) {
+    // TODO: Load tile assets
+    if ( assets.LoadFile("assets/tilemap.xml") != tinyxml2::XML_SUCCESS ) {
         std::cerr << "Error loading XML file: assets/tilemap.xml" << '\n';
     }
-    
-    tinyxml2::XMLNode* tile = tileMap.RootElement()->FirstChild();
 
-    while ( tile != nullptr ) {
-        assetsManager->addTexture( tile->FirstChildElement("name")->FirstChild()->Value(),
-                tile->FirstChildElement("path")->FirstChild()->Value() );
+    tinyxml2::XMLNode* asset = assets.RootElement()->FirstChild();
 
-        tile = tile->NextSibling();
+    while ( asset != nullptr ) {
+        assetsManager->addTexture( asset->FirstChildElement("name")->FirstChild()->Value(),
+                                   asset->FirstChildElement("path")->FirstChild()->Value() );
+
+        asset = asset->NextSibling();
     }
 
     for ( int i = 0; i < 30; i++ ) {
         Entity& entityTile = entityManager->addEntity("tile-" + std::to_string( i + ( 1 * 100 ) ), TILEMAP_LAYER);
         entityTile.addComponent<SpriteComponent>("tile-" + std::to_string(i + 1));
+    }
+
+    // TODO: Load entities assets
+    if ( assets.LoadFile("assets/images.xml") != tinyxml2::XML_SUCCESS ) {
+        std::cerr << "Error loading XML file: assets/images.xml" << '\n';
+    }
+
+    asset = assets.RootElement()->FirstChild();
+
+    while ( asset != nullptr ) {
+        assetsManager->addTexture( asset->FirstChildElement("name")->FirstChild()->Value(),
+                                   asset->FirstChildElement("path")->FirstChild()->Value() );
+
+        Entity& entity = entityManager->addEntity(asset->FirstChildElement("name")->FirstChild()->Value(), PLAYER_LAYER);
+        entity.addComponent<SpriteComponent>(asset->FirstChildElement("name")->FirstChild()->Value());
+
+        asset = asset->NextSibling();
     }
 
     entityManager->initialize();
