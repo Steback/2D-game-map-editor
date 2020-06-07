@@ -3,6 +3,7 @@ project(2D_Game_Map_Editor)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Editor Source Files
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
 # Dear ImGui Source Files

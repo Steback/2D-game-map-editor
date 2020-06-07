@@ -1,6 +1,8 @@
 #ifndef EDITOR_UI_H
 #define EDITOR_UI_H
 
+#include <map>
+
 // Dear ImGui
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -14,7 +16,8 @@ class EditorUI {
         void renderUI();
         void mainMenuBar();
         void entitiesPanel();
-        void tilesMapPanel();
+        void proprietiesPanel();
+        void tilesMapPanel() const;
         void getVersions();
 
     private:
@@ -23,6 +26,7 @@ class EditorUI {
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
         bool createEntity{};
+        std::map<std::string, std::string> entitiesNames;
 };
 
 #endif

@@ -27,7 +27,7 @@ void EditorUI::initialized(GLFWwindow* _window) {
     io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
 
     // TODO: Window flags
-    windowFlags |= ImGuiWindowFlags_NoTitleBar;
+    windowFlags |= ImGuiWindowFlags_NoCollapse;
     windowFlags |= ImGuiWindowFlags_NoResize;
 }
 
@@ -86,6 +86,13 @@ void EditorUI::entitiesPanel() {
 
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
+
+        for (auto & entityName : entitiesNames) {
+            ImGui::Text("%s", &entityName.first[0]);
+
+            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second)->getTextureID(),
+                          ImVec2(60, 60) );
+        }
 
         // TODO: Create Entities
         if ( createEntity ) {
@@ -163,6 +170,8 @@ void EditorUI::entitiesPanel() {
                         0, 3, 2
                 } );
 
+                entitiesNames.emplace(entityName.data(), currentAsset);
+
                 createEntity = !createEntity;
             }
 
@@ -171,11 +180,15 @@ void EditorUI::entitiesPanel() {
     ImGui::End();
 }
 
-void EditorUI::tilesMapPanel() {
+void EditorUI::proprietiesPanel() {
+
+}
+
+void EditorUI::tilesMapPanel() const {
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
 
-    ImGui::Begin("Stats", nullptr, windowFlags);
+    ImGui::Begin("Tiles Map", nullptr, windowFlags);
         for ( int i = 0; i < 30; i++ ) {
             if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
