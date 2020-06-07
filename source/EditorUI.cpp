@@ -36,6 +36,7 @@ void EditorUI::renderUI() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    ImGui::ShowDemoWindow();
     mainMenuBar();
     entitiesPanel();
     tilesMapPanel();
@@ -87,11 +88,14 @@ void EditorUI::entitiesPanel() {
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
+        int entityIndex = 1;
         for (auto & entityName : entitiesNames) {
-            ImGui::Text("%s", &entityName.first[0]);
+            if ( entityIndex % 2 == 0 ) ImGui::SameLine();
 
             ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second)->getTextureID(),
                           ImVec2(60, 60) );
+
+            entityIndex++;
         }
 
         // TODO: Create Entities
