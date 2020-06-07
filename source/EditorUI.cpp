@@ -87,7 +87,7 @@ void EditorUI::entitiesPanel() {
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
-        // Create Entities
+        // TODO: Create Entities
         if ( createEntity ) {
             ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
             ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
@@ -96,7 +96,7 @@ void EditorUI::entitiesPanel() {
 
             // Entity Name
             static std::array<char, 30> entityName{};
-            ImGui::InputText("Entity Name", &entityName[0], entityName.size(), ImGuiInputTextFlags_AlwaysInsertMode);
+            ImGui::InputText("Entity Name", &entityName[0], entityName.size());
 
             // Entity Layer
             std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
