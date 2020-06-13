@@ -31,8 +31,8 @@ void EntityManager::destory() {
     entities.clear();
 }
 
-Entity& EntityManager::addEntity(const std::string& _entityName, LayerType _layer) {
-    auto* entity = new Entity(*this, _entityName, _layer);
+Entity& EntityManager::addEntity(const unsigned int& id, const std::string& _entityName, LayerType _layer) {
+    auto* entity = new Entity(*this, id, _entityName, _layer);
     entities.emplace_back(entity);
     return *entity;
 }
@@ -42,8 +42,18 @@ std::vector<Entity*> EntityManager::getEntities() const { return entities; }
 unsigned int EntityManager::getEntityCount() const { return entities.size(); }
 
 Entity* EntityManager::getEntityByName(const std::string& entityName) const {
-    for ( auto* entity: entities ) {
+    for ( auto& entity : entities ) {
         if ( entity->name == entityName ) {
+            return entity;
+        }
+    }
+
+    return nullptr;
+}
+
+Entity *EntityManager::getEntityByID(const unsigned int &id) const {
+    for ( auto& entity : entities) {
+        if ( entity->ID() == id ) {
             return entity;
         }
     }
@@ -62,3 +72,5 @@ std::vector<Entity *> EntityManager::getEntitiesLayer(LayerType _layer) const {
 
     return selectedEntities;
 }
+
+unsigned int EntityManager::entitiesCount() const { return entities.size(); }

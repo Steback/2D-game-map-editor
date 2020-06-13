@@ -1,7 +1,7 @@
 #ifndef EDITOR_UI_H
 #define EDITOR_UI_H
 
-#include <map>
+#include <vector>
 
 // Dear ImGui
 #include "imgui.h"
@@ -26,7 +26,7 @@ class EditorUI {
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
         bool createEntity{};
-        std::map<std::string, std::string> entitiesNames;
+        std::vector<std::pair<unsigned int, std::string> > entitiesID;
 };
 
 #endif

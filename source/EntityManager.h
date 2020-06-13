@@ -16,11 +16,13 @@ class EntityManager {
         void update(float deltaTime);
         void render() const;
         void destory();
-        Entity& addEntity(const std::string& _entityName, LayerType _layer);
+        Entity& addEntity(const unsigned int& id, const std::string& _entityName, LayerType _layer);
         std::vector<Entity*> getEntities() const;
         std::vector<Entity*> getEntitiesLayer(LayerType _layer) const;
         unsigned int getEntityCount() const;
         Entity* getEntityByName(const std::string& entityName) const;
+        Entity* getEntityByID(const unsigned int& id) const;
+        unsigned int entitiesCount() const;
 
     private:
         std::vector<Entity*> entities;

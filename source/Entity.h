@@ -15,7 +15,7 @@ class Component;
 class Entity {
     public:
         explicit Entity(EntityManager& _manager);
-        Entity(EntityManager& _manager, std::string  _name, LayerType _layer);
+        Entity(EntityManager& _manager, unsigned int _id, std::string  _name, LayerType _layer);
         ~Entity();
         void initialize();
         void update(float deltaTime);
@@ -34,10 +34,13 @@ class Entity {
             return *newComponent;
         }
 
+        unsigned int ID() const;
+
         std::string name{};
         LayerType layer{};
 
     private:
+        unsigned int id;
         EntityManager& manager;
         std::map<const std::type_info*, Component*> componentType;
         std::vector<Component*> components;

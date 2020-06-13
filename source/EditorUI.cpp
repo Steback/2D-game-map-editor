@@ -39,6 +39,7 @@ void EditorUI::renderUI() {
     ImGui::ShowDemoWindow();
     mainMenuBar();
     entitiesPanel();
+    proprietiesPanel();
     tilesMapPanel();
 
     ImGui::Render();
@@ -83,13 +84,13 @@ void EditorUI::mainMenuBar() {
 
 void EditorUI::entitiesPanel() {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y / 2) - 22), ImGuiCond_Always);
 
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
         int entityIndex = 1;
-        for (auto & entityName : entitiesNames) {
+        for ( auto & entityName : entitiesID ) {
             if ( entityIndex % 2 == 0 ) ImGui::SameLine();
 
             ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second)->getTextureID(),
@@ -157,7 +158,8 @@ void EditorUI::entitiesPanel() {
 
             // Button
             if ( ImGui::Button("Create") ) {
-                Entity& entity = Editor::entityManager->addEntity(entityName.data(), static_cast<LayerType>(layerIndex + 1));
+                Entity& entity = Editor::entityManager->addEntity(Editor::entityManager->entitiesCount() + 1,
+                        entityName.data(), static_cast<LayerType>(layerIndex + 1));
 
                 entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, 2.0f),
                                                         0.0f, glm::vec2(0.0f, 0.0f));
@@ -174,7 +176,7 @@ void EditorUI::entitiesPanel() {
                         0, 3, 2
                 } );
 
-                entitiesNames.emplace(entityName.data(), currentAsset);
+                entitiesID.emplace_back(entity.ID(), currentAsset);
 
                 createEntity = !createEntity;
             }
@@ -185,7 +187,15 @@ void EditorUI::entitiesPanel() {
 }
 
 void EditorUI::proprietiesPanel() {
+    ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y / 2), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y / 2 ) ), ImGuiCond_Always);
 
+    ImGui::Begin("Proprieties", nullptr, windowFlags);
+        if ( !entitiesID.empty() ) {
+            Entity* entity = Editor::entityManager->getEntityByID(entitiesID[0].first);
+            
+        }
+    ImGui::End();
 }
 
 void EditorUI::tilesMapPanel() const {

@@ -58,7 +58,9 @@ void Editor::initialized() {
     }
 
     for ( int i = 0; i < 30; i++ ) {
-        Entity& entityTile = entityManager->addEntity("tile-" + std::to_string( i + ( 1 * 100 ) ), TILEMAP_LAYER);
+        Entity& entityTile = entityManager->addEntity(i + 1, "tile-" + std::to_string( i + ( 1 * 100 ) ),
+                TILEMAP_LAYER);
+
         entityTile.addComponent<SpriteComponent>("tile-" + std::to_string(i + 1));
     }
 
@@ -73,7 +75,9 @@ void Editor::initialized() {
         assetsManager->addTexture( asset->FirstChildElement("name")->FirstChild()->Value(),
                                    asset->FirstChildElement("path")->FirstChild()->Value() );
 
-        Entity& entity = entityManager->addEntity(asset->FirstChildElement("name")->FirstChild()->Value(), PLAYER_LAYER);
+        Entity& entity = entityManager->addEntity(entityManager->entitiesCount() + 1,
+                asset->FirstChildElement("name")->FirstChild()->Value(), PLAYER_LAYER);
+
         entity.addComponent<SpriteComponent>(asset->FirstChildElement("name")->FirstChild()->Value());
 
         asset = asset->NextSibling();

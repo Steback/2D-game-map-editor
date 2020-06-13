@@ -3,7 +3,8 @@
 
 Entity::Entity(EntityManager& _manager) : manager(_manager) {  }
 
-Entity::Entity(EntityManager &_manager, std::string  _name, LayerType _layer) : manager(_manager), name(std::move( _name )), layer(_layer) {  }
+Entity::Entity(EntityManager &_manager, unsigned int _id, std::string  _name, LayerType _layer)
+    : manager(_manager), id(_id), name(std::move( _name )), layer(_layer) {  }
 
 Entity::~Entity() { destroy(); }
 
@@ -30,3 +31,5 @@ void Entity::destroy() {
         delete component;
     }
 }
+
+unsigned int Entity::ID() const { return id; }
