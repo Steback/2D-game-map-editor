@@ -35,8 +35,7 @@ void EditorUI::renderUI() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
-    ImGui::ShowDemoWindow();
+    
     mainMenuBar();
     entitiesPanel();
     proprietiesPanel();
@@ -84,7 +83,7 @@ void EditorUI::mainMenuBar() {
 
 void EditorUI::entitiesPanel() {
     ImGui::SetNextWindowPos(ImVec2(0,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y / 2) - 22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.6f) - 22), ImGuiCond_Always);
 
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
@@ -187,13 +186,68 @@ void EditorUI::entitiesPanel() {
 }
 
 void EditorUI::proprietiesPanel() {
-    ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y / 2), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y / 2 ) ), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y  * 0.6f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.4f ) ), ImGuiCond_Always);
 
     ImGui::Begin("Proprieties", nullptr, windowFlags);
         if ( !entitiesID.empty() ) {
             Entity* entity = Editor::entityManager->getEntityByID(entitiesID[0].first);
-            
+
+            // Entity Sprite
+            auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
+
+            std::vector<std::string> assets = { "chopper-sinngle", "tank-big", "truck" };
+            static int assetIndex = 0;
+            std::string currentAsset = assets[assetIndex];
+
+            if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
+                for ( int i = 0; i < assets.size(); i++ ) {
+                    const bool isSelected = ( assetIndex == i );
+
+                    if ( ImGui::Selectable(&assets[i][0], isSelected ) ) {
+                        assetIndex = i;
+                    }
+
+                    if ( isSelected ) ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
+
+            entitySprite->texture = Editor::assetsManager->getTexture(currentAsset);
+            entitiesID[0].second = currentAsset;
+
+            ImGui::Image((void*)(intptr_t)entitySprite->texture->getTextureID(), ImVec2(60, 60));
+
+            // Entity Name
+            ImGui::InputText("Name", &entity->name[0], 30);
+
+            // Entity Layer
+            std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
+            static int layerIndex = entity->layer - 1;
+            std::string currentLayer = layerTypes[layerIndex];
+
+            if ( ImGui::BeginCombo("Layer", &currentLayer[0]) ) {
+                for ( int i = 0; i < layerTypes.size(); i++ ) {
+                    const bool isSelected = ( layerIndex == i );
+
+                    if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
+                        layerIndex = i;
+                        entity->layer = static_cast<LayerType>(layerIndex + 1);
+                    }
+
+                    if ( isSelected )
+                        ImGui::SetItemDefaultFocus();
+                }
+
+                ImGui::EndCombo();
+            }
+
+            // Entity Transform
+            auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+
+            ImGui::InputFloat("X", &entityTransform->translate.x, 1);
+            ImGui::InputFloat("Y", &entityTransform->translate.y, 1);
         }
     ImGui::End();
 }

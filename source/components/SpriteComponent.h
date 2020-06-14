@@ -8,6 +8,8 @@
 
 class SpriteComponent : public Component {
     public:
+        std::shared_ptr<TextureManager> texture{};
+
         explicit SpriteComponent(const std::string& textureID) : texture(Editor::assetsManager->getTexture(textureID)) {  }
 
         void initialize() override { texture->loadTexture(); }
@@ -15,10 +17,6 @@ class SpriteComponent : public Component {
         void update(float deltaTime) override {  }
 
         void render() override { texture->useTexture(); }
-
-    private:
-        std::shared_ptr<TextureManager> texture{};
-
 };
 
 #endif

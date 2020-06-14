@@ -1,16 +1,16 @@
 #include "Editor.h"
 
 int main(int, char**) {
-    std::unique_ptr<Editor> editor = std::make_unique<Editor>();
+    Editor editor;
 
-    editor->initialized();
+    editor.initialized();
 
-    while ( !editor->isRunning() ) {
-        editor->update();
-        editor->render();
+    while ( !editor.isRunning() ) {
+        editor.update();
+        editor.render();
     }
 
-    editor->destroy();
+    editor.destroy();
 
     return 0;
 }

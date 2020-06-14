@@ -107,6 +107,7 @@ void Editor::render() {
 
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
+
     entityManager->render();
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

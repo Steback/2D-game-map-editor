@@ -1,7 +1,7 @@
 #include "EntityManager.h"
 #include "Entity.h"
 
-EntityManager::~EntityManager() { destory(); }
+EntityManager::~EntityManager() { destroy(); }
 
 void EntityManager::initialize() {
     for ( auto& entity : entities ) {
@@ -23,7 +23,7 @@ void EntityManager::render() const {
     }
 }
 
-void EntityManager::destory() {
+void EntityManager::destroy() {
     for ( auto & entity : entities ) {
         delete entity;
     }
@@ -38,8 +38,6 @@ Entity& EntityManager::addEntity(const unsigned int& id, const std::string& _ent
 }
 
 std::vector<Entity*> EntityManager::getEntities() const { return entities; }
-
-unsigned int EntityManager::getEntityCount() const { return entities.size(); }
 
 Entity* EntityManager::getEntityByName(const std::string& entityName) const {
     for ( auto& entity : entities ) {

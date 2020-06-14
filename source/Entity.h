@@ -38,12 +38,12 @@ class Entity {
 
         std::string name{};
         LayerType layer{};
+        std::vector<Component*> components;
 
     private:
         unsigned int id;
         EntityManager& manager;
         std::map<const std::type_info*, Component*> componentType;
-        std::vector<Component*> components;
 };
 
 #endif

@@ -69,7 +69,7 @@ void Shader::CompileShader(const std::string& _vertexCode, const std::string& _f
     }
 }
 
-void Shader::AddShader(GLuint _program, const std::string& _shaderCode, GLenum _shaderType) const {
+void Shader::AddShader(GLuint _program, const std::string& _shaderCode, GLenum _shaderType) {
     GLuint shader = glCreateShader(_shaderType);
 
     const GLchar* shaderCode = _shaderCode.c_str();

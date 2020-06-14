@@ -23,12 +23,15 @@ class TransformComponent : public Component {
             : model(glm::mat4(1.0f)), translate(_translate), scale(_scale), angle(_angle), rotate(_rotate) {  }
 
         void initialize() override {
-            model = glm::translate(model, glm::vec3(translate, 1.0f));
-            model = glm::scale(model, glm::vec3(scale, 1.0f));
-            model = glm::rotate(model, angle, glm::vec3(rotate, 1.0f));
+
         }
 
         void update(float deltaTime) override {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(-translate, 0.0f));
+            model = glm::scale(model, glm::vec3(scale, 1.0f));
+            model = glm::rotate(model, angle, glm::vec3(rotate, 1.0f));
+
             glUniformMatrix4fv(Editor::shaders[0]->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
         }
 

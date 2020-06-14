@@ -20,7 +20,7 @@ class Shader {
     private:
         GLuint shaderID{};
         void CompileShader(const std::string& _vertexCode, const std::string& _fragmentCode);
-        void AddShader(GLuint _program, const std::string& _shaderCode, GLenum _shaderType) const;
+        static void AddShader(GLuint _program, const std::string& _shaderCode, GLenum _shaderType) ;
 };
 
 #endif
