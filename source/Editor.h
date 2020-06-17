@@ -24,14 +24,13 @@ class Editor {
         ~Editor();
         void initialized();
         bool isRunning();
-        void update();
         void render();
+        void renderEntities();
         void destroy();
 
         static std::unique_ptr<AssetsManager> assetsManager;
         static std::unique_ptr<EntityManager> entityManager;
         static std::vector<Shader*> shaders;
-        static std::vector<Mesh*> mesh;
 
     private:
         std::unique_ptr<Window> window;

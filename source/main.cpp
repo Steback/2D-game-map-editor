@@ -6,7 +6,6 @@ int main(int, char**) {
     editor.initialized();
 
     while ( !editor.isRunning() ) {
-        editor.update();
         editor.render();
     }
 

@@ -16,7 +16,6 @@
 std::unique_ptr<AssetsManager> Editor::assetsManager;
 std::unique_ptr<EntityManager> Editor::entityManager;
 std::vector<Shader*> Editor::shaders;
-std::vector<Mesh*> Editor::mesh;
 
 Editor::Editor() : window(new Window(WINDOW_WIDTH, WINDOW_HEIGHT)) {  }
 
@@ -88,27 +87,28 @@ void Editor::initialized() {
 
 bool Editor::isRunning() { return window->isRunning(); }
 
-void Editor::update() {
-    GLfloat now = glfwGetTime();
-    deltaTime = now - lastTime;
-    lastTime = now;
-
+void Editor::renderEntities() {
     shaders[0]->UseShader();
 
+    glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
+    glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
+
     entityManager->update(deltaTime);
+
+    entityManager->render();
 }
 
 void Editor::render() {
+    GLfloat now = glfwGetTime();
+    deltaTime = now - lastTime;
+    lastTime = now;
 
     glfwPollEvents();
 
     window->render();
     ui->renderUI();
 
-    glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
-    glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
-
-    entityManager->render();
+    renderEntities();
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     window->swapBuffers();
@@ -116,15 +116,12 @@ void Editor::render() {
 
 void Editor::destroy() {
     window->destroy();
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
     for ( auto& s : shaders ) {
         delete s;
-    }
-
-    for ( auto& m : mesh ) {
-        delete m;
     }
 }

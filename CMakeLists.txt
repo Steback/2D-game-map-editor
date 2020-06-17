@@ -25,17 +25,13 @@ include_directories(${PROJECT_SOURCE_DIR}/lib/stb)
 include_directories(${PROJECT_SOURCE_DIR}/lib/imgui)
 
 # GLFW
-find_package(glfw3 REQUIRED)
-include_directories(${GLFW_INCLUDE_DIRS})
-link_libraries(${GLFW_LIBRARY_DIRS})
+find_library(glfw3 REQUIRED)
 
 # OpenGL
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
+find_library(OpenGL REQUIRED)
 
 # GLEW
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
+find_library(GLEW REQUIRED)
 
 # GLM
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/glm)

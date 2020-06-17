@@ -1,6 +1,9 @@
 # Clion
 .idea/
 
+# VS Code
+.vscode/
+
 # CMake
 build/
 cmake-build-debug/

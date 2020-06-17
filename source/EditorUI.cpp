@@ -191,7 +191,7 @@ void EditorUI::proprietiesPanel() {
 
     ImGui::Begin("Proprieties", nullptr, windowFlags);
         if ( !entitiesID.empty() ) {
-            Entity* entity = Editor::entityManager->getEntityByID(entitiesID[0].first);
+            Entity* entity = Editor::entityManager->getEntityByID(entitiesID[entitiesID.size() - 1].first);
 
             // Entity Sprite
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
@@ -215,7 +215,7 @@ void EditorUI::proprietiesPanel() {
             }
 
             entitySprite->texture = Editor::assetsManager->getTexture(currentAsset);
-            entitiesID[0].second = currentAsset;
+            entitiesID[entitiesID.size() - 1].second = currentAsset;
 
             ImGui::Image((void*)(intptr_t)entitySprite->texture->getTextureID(), ImVec2(60, 60));
 

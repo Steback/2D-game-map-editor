@@ -2,7 +2,6 @@
 #define MESH_COMPONENT_H
 
 #include <vector>
-#include <memory>
 
 #include "glm/glm.hpp"
 
