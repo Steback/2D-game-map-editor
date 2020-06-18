@@ -28,7 +28,6 @@ class Entity {
 
             newComponent->owner = this;
             components.emplace_back(newComponent);
-            componentType[&typeid(*newComponent)] = newComponent;
             newComponent->initialize();
 
             return *newComponent;
@@ -41,9 +40,8 @@ class Entity {
         std::vector<Component*> components;
 
     private:
-        unsigned int id;
+        unsigned int id{};
         EntityManager& manager;
-        std::map<const std::type_info*, Component*> componentType;
 };
 
 #endif

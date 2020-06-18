@@ -7,7 +7,6 @@
 #include "EditorUI.h"
 #include "Constants.h"
 #include "Shader.h"
-#include "Mesh.h"
 #include "Entity.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"
