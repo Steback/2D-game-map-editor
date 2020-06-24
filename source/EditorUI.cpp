@@ -176,6 +176,10 @@ void EditorUI::entitiesPanel() {
 
                 EntityManager::entitiesID.emplace_back(entity.ID(), std::pair(currentAsset, assetIndex));
 
+                layerIndex = 0;
+                assetIndex = 0;
+                entityName.fill('\0');
+
                 createEntity = !createEntity;
             }
 
@@ -184,7 +188,7 @@ void EditorUI::entitiesPanel() {
     ImGui::End();
 }
 
-void EditorUI::proprietiesPanel() {
+void EditorUI::proprietiesPanel() const {
     ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y  * 0.6f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.4f ) ), ImGuiCond_Always);
 
@@ -195,7 +199,7 @@ void EditorUI::proprietiesPanel() {
             // Entity Sprite
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
 
-            static int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
+            int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
             std::string currentAsset = AssetsManager::texturesNames[assetIndex];
 
             if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
