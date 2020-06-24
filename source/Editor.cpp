@@ -78,6 +78,8 @@ void Editor::initialized() {
 
         entity.addComponent<SpriteComponent>(asset->FirstChildElement("name")->FirstChild()->Value());
 
+        AssetsManager::texturesNames.emplace_back(asset->FirstChildElement("name")->FirstChild()->Value());
+
         asset = asset->NextSibling();
     }
 

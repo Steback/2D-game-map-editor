@@ -22,8 +22,9 @@ class EntityManager {
         Entity* getEntityByName(const std::string& entityName) const;
         Entity* getEntityByID(const unsigned int& id) const;
         unsigned int entitiesCount() const;
+        static std::vector<std::pair<unsigned int, std::pair<std::string, unsigned int> > > entitiesID;
 
-    private:
+private:
         std::vector<Entity*> entities;
 };
 

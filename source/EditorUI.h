@@ -26,7 +26,6 @@ class EditorUI {
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
         bool createEntity{};
-        std::vector<std::pair<unsigned int, std::string> > entitiesID;
 };
 
 #endif

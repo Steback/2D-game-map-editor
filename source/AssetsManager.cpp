@@ -1,5 +1,7 @@
 #include "AssetsManager.h"
 
+std::vector<std::string> AssetsManager::texturesNames;
+
 AssetsManager::AssetsManager() = default;
 
 AssetsManager::~AssetsManager() = default;

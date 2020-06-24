@@ -1,6 +1,8 @@
 #include "EntityManager.h"
 #include "Entity.h"
 
+std::vector<std::pair<unsigned int, std::pair<std::string, unsigned int> > > EntityManager::entitiesID;
+
 EntityManager::~EntityManager() { destroy(); }
 
 void EntityManager::initialize() {

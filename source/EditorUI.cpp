@@ -89,10 +89,10 @@ void EditorUI::entitiesPanel() {
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
         int entityIndex = 1;
-        for ( auto & entityName : entitiesID ) {
+        for ( auto & entityName : EntityManager::entitiesID ) {
             if ( entityIndex % 2 == 0 ) ImGui::SameLine();
 
-            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second)->getTextureID(),
+            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second.first)->getTextureID(),
                           ImVec2(60, 60) );
 
             entityIndex++;
@@ -130,19 +130,18 @@ void EditorUI::entitiesPanel() {
             }
 
             // Entity Sprite
-            std::vector<std::string> assets = { "chopper-sinngle", "tank-big", "truck" };
             static int assetIndex = 0;
-            std::string currentAsset = assets[assetIndex];
+            std::string currentAsset = AssetsManager::texturesNames[assetIndex];
 
             if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
-                for ( int i = 0; i < assets.size(); i++ ) {
+                for ( int i = 0; i < AssetsManager::texturesNames.size(); i++ ) {
                     const bool isSelected = ( assetIndex == i );
 
-                    if ( ImGui::Selectable(&assets[i][0], isSelected ) ) {
+                    if ( ImGui::Selectable(&AssetsManager::texturesNames[i][0], isSelected ) ) {
                         assetIndex = i;
                     }
 
-                    ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(assets[i])->getTextureID(),
+                    ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(AssetsManager::texturesNames[i])->getTextureID(),
                             ImVec2(60, 60));
 
                     if ( isSelected )
@@ -175,7 +174,7 @@ void EditorUI::entitiesPanel() {
                         0, 3, 2
                 } );
 
-                entitiesID.emplace_back(entity.ID(), currentAsset);
+                EntityManager::entitiesID.emplace_back(entity.ID(), std::pair(currentAsset, assetIndex));
 
                 createEntity = !createEntity;
             }
@@ -190,21 +189,20 @@ void EditorUI::proprietiesPanel() {
     ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.4f ) ), ImGuiCond_Always);
 
     ImGui::Begin("Proprieties", nullptr, windowFlags);
-        if ( !entitiesID.empty() ) {
-            Entity* entity = Editor::entityManager->getEntityByID(entitiesID[entitiesID.size() - 1].first);
+        if ( !EntityManager::entitiesID.empty() ) {
+            Entity* entity = Editor::entityManager->getEntityByID(EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].first);
 
             // Entity Sprite
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
 
-            std::vector<std::string> assets = { "chopper-sinngle", "tank-big", "truck" };
-            static int assetIndex = 0;
-            std::string currentAsset = assets[assetIndex];
+            static int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
+            std::string currentAsset = AssetsManager::texturesNames[assetIndex];
 
             if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
-                for ( int i = 0; i < assets.size(); i++ ) {
+                for ( int i = 0; i < AssetsManager::texturesNames.size(); i++ ) {
                     const bool isSelected = ( assetIndex == i );
 
-                    if ( ImGui::Selectable(&assets[i][0], isSelected ) ) {
+                    if ( ImGui::Selectable(&AssetsManager::texturesNames[i][0], isSelected ) ) {
                         assetIndex = i;
                     }
 
@@ -215,7 +213,7 @@ void EditorUI::proprietiesPanel() {
             }
 
             entitySprite->texture = Editor::assetsManager->getTexture(currentAsset);
-            entitiesID[entitiesID.size() - 1].second = currentAsset;
+            EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.first = currentAsset;
 
             ImGui::Image((void*)(intptr_t)entitySprite->texture->getTextureID(), ImVec2(60, 60));
 
