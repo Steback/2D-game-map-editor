@@ -13,6 +13,8 @@ class AssetsManager {
         ~AssetsManager();
         void addTexture(const std::string& _textureID, const std::string& _filePath);
         std::shared_ptr<TextureManager> getTexture(const std::string& _textureID);
+        void loadTextures();
+
         static std::vector<std::string> texturesNames;
 
     private:

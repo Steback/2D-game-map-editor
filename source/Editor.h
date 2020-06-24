@@ -30,7 +30,7 @@ class Editor {
 
         static std::unique_ptr<AssetsManager> assetsManager;
         static std::unique_ptr<EntityManager> entityManager;
-        static std::vector<Shader*> shaders;
+        static std::vector<std::unique_ptr<Shader> > shaders;
 
     private:
         std::unique_ptr<Window> window;

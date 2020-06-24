@@ -17,11 +17,9 @@ void EditorUI::initialized(GLFWwindow* _window) {
     style.WindowRounding = 0;
     style.WindowPadding = ImVec2(10, 15);
 
-    std::string glsl_version = "#version 330";
-
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(_window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     // TODO: Load Font
     io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);

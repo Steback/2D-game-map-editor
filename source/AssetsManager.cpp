@@ -11,3 +11,9 @@ void AssetsManager::addTexture(const std::string& _textureID, const std::string&
 }
 
 std::shared_ptr<TextureManager> AssetsManager::getTexture(const std::string& _textureID) { return textures[_textureID]; }
+
+void AssetsManager::loadTextures() {
+    for ( auto& texture : textures ) {
+        texture.second->loadTexture();
+    }
+}

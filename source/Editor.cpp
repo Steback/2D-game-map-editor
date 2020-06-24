@@ -14,7 +14,7 @@
 // TODO: Statics objects
 std::unique_ptr<AssetsManager> Editor::assetsManager;
 std::unique_ptr<EntityManager> Editor::entityManager;
-std::vector<Shader*> Editor::shaders;
+std::vector<std::unique_ptr<Shader> > Editor::shaders;
 
 Editor::Editor() : window(new Window(WINDOW_WIDTH, WINDOW_HEIGHT)) {  }
 
@@ -36,8 +36,7 @@ void Editor::initialized() {
     entityManager = std::make_unique<EntityManager>();
     assetsManager = std::make_unique<AssetsManager>();
 
-    auto* shader = new Shader("shaders/vertexShader.vert", "shaders/fragmentShader.frag");
-    shaders.push_back(shader);
+    shaders.push_back(std::make_unique<Shader>("shaders/vertexShader.vert", "shaders/fragmentShader.frag"));
 
     tinyxml2::XMLDocument assets;
 
@@ -55,13 +54,6 @@ void Editor::initialized() {
         asset = asset->NextSibling();
     }
 
-    for ( int i = 0; i < 30; i++ ) {
-        Entity& entityTile = entityManager->addEntity(i + 1, "tile-" + std::to_string( i + ( 1 * 100 ) ),
-                TILEMAP_LAYER);
-
-        entityTile.addComponent<SpriteComponent>("tile-" + std::to_string(i + 1));
-    }
-
     // TODO: Load entities assets
     if ( assets.LoadFile("assets/images.xml") != tinyxml2::XML_SUCCESS ) {
         std::cerr << "Error loading XML file: assets/images.xml" << '\n';
@@ -73,15 +65,12 @@ void Editor::initialized() {
         assetsManager->addTexture( asset->FirstChildElement("name")->FirstChild()->Value(),
                                    asset->FirstChildElement("path")->FirstChild()->Value() );
 
-        Entity& entity = entityManager->addEntity(entityManager->entitiesCount() + 1,
-                asset->FirstChildElement("name")->FirstChild()->Value(), PLAYER_LAYER);
-
-        entity.addComponent<SpriteComponent>(asset->FirstChildElement("name")->FirstChild()->Value());
-
         AssetsManager::texturesNames.emplace_back(asset->FirstChildElement("name")->FirstChild()->Value());
 
         asset = asset->NextSibling();
     }
+
+    assetsManager->loadTextures();
 
     entityManager->initialize();
 }
@@ -121,8 +110,4 @@ void Editor::destroy() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-
-    for ( auto& s : shaders ) {
-        delete s;
-    }
 }
