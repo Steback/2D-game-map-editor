@@ -12,11 +12,17 @@ class SpriteComponent : public Component {
 
         explicit SpriteComponent(const std::string& textureID) : texture(Editor::assetsManager->getTexture(textureID)) {  }
 
-        void initialize() override { texture->loadTexture(); }
+        void initialize() override {
 
-        void update(float deltaTime) override {  }
+        }
 
-        void render() override { texture->useTexture(); }
+        void update(float deltaTime) override {
+
+        }
+
+        void render() override {
+            texture->useTexture();
+        }
 };
 
 #endif

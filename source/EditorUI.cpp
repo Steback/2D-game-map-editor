@@ -102,85 +102,83 @@ void EditorUI::entitiesPanel() {
             ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
 
             ImGui::Begin("Create Entity", &createEntity, ImGuiWindowFlags_NoResize);
+                // Entity Name
+                static std::array<char, 30> entityName{};
+                ImGui::InputText("Entity Name", &entityName[0], entityName.size());
 
-            // Entity Name
-            static std::array<char, 30> entityName{};
-            ImGui::InputText("Entity Name", &entityName[0], entityName.size());
+                // Entity Layer
+                std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
+                static int layerIndex = 0;
+                std::string currentLayer = layerTypes[layerIndex];
 
-            // Entity Layer
-            std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
-            static int layerIndex = 0;
-            std::string currentLayer = layerTypes[layerIndex];
+                if ( ImGui::BeginCombo("Layer Type", &currentLayer[0]) ) {
+                    for ( int i = 0; i < layerTypes.size(); i++ ) {
+                        const bool isSelected = ( layerIndex == i );
 
-            if ( ImGui::BeginCombo("Layer Type", &currentLayer[0]) ) {
-                for ( int i = 0; i < layerTypes.size(); i++ ) {
-                    const bool isSelected = ( layerIndex == i );
+                        if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
+                            layerIndex = i;
+                        }
 
-                    if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
-                        layerIndex = i;
+                        if ( isSelected )
+                            ImGui::SetItemDefaultFocus();
                     }
 
-                    if ( isSelected )
-                        ImGui::SetItemDefaultFocus();
+                    ImGui::EndCombo();
                 }
 
-                ImGui::EndCombo();
-            }
+                // Entity Sprite
+                static int assetIndex = 0;
+                std::string currentAsset = AssetsManager::texturesNames[assetIndex];
 
-            // Entity Sprite
-            static int assetIndex = 0;
-            std::string currentAsset = AssetsManager::texturesNames[assetIndex];
+                if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
+                    for ( int i = 0; i < AssetsManager::texturesNames.size(); i++ ) {
+                        const bool isSelected = ( assetIndex == i );
 
-            if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
-                for ( int i = 0; i < AssetsManager::texturesNames.size(); i++ ) {
-                    const bool isSelected = ( assetIndex == i );
+                        if ( ImGui::Selectable(&AssetsManager::texturesNames[i][0], isSelected ) ) {
+                            assetIndex = i;
+                        }
 
-                    if ( ImGui::Selectable(&AssetsManager::texturesNames[i][0], isSelected ) ) {
-                        assetIndex = i;
+                        ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(AssetsManager::texturesNames[i])->getTextureID(),
+                                ImVec2(60, 60));
+
+                        if ( isSelected )
+                            ImGui::SetItemDefaultFocus();
                     }
 
-                    ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(AssetsManager::texturesNames[i])->getTextureID(),
-                            ImVec2(60, 60));
-
-                    if ( isSelected )
-                        ImGui::SetItemDefaultFocus();
+                    ImGui::EndCombo();
                 }
 
-                ImGui::EndCombo();
-            }
+                ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(currentAsset)->getTextureID(),
+                            ImVec2(60, 60) );
 
-            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(currentAsset)->getTextureID(),
-                        ImVec2(60, 60) );
+                // Button
+                if ( ImGui::Button("Create") ) {
+                    Entity& entity = Editor::entityManager->addEntity(Editor::entityManager->entitiesCount() + 1,
+                            entityName.data(), static_cast<LayerType>(layerIndex + 1));
 
-            // Button
-            if ( ImGui::Button("Create") ) {
-                Entity& entity = Editor::entityManager->addEntity(Editor::entityManager->entitiesCount() + 1,
-                        entityName.data(), static_cast<LayerType>(layerIndex + 1));
+                    entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, 2.0f),
+                                                            0.0f, glm::vec2(0.0f, 0.0f));
 
-                entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, 2.0f),
-                                                        0.0f, glm::vec2(0.0f, 0.0f));
+                    entity.addComponent<SpriteComponent>(currentAsset);
 
-                entity.addComponent<SpriteComponent>(currentAsset);
+                    entity.addComponent<MeshComponent>( std::vector<Shape> {
+                            { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+                            { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
+                            { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
+                            { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
+                    }, std::vector<GLuint> {
+                            1, 3, 2,
+                            0, 3, 2
+                    } );
 
-                entity.addComponent<MeshComponent>( std::vector<Shape> {
-                        { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-                        { glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-                        { glm::vec2(-1.0f, 1.0f), glm::vec2(0.0f, 1.0) },
-                        { glm::vec2(1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-                }, std::vector<GLuint> {
-                        1, 3, 2,
-                        0, 3, 2
-                } );
+                    EntityManager::entitiesID.emplace_back(entity.ID(), std::pair(currentAsset, assetIndex));
 
-                EntityManager::entitiesID.emplace_back(entity.ID(), std::pair(currentAsset, assetIndex));
+                    layerIndex = 0;
+                    assetIndex = 0;
+                    entityName.fill('\0');
 
-                layerIndex = 0;
-                assetIndex = 0;
-                entityName.fill('\0');
-
-                createEntity = !createEntity;
-            }
-
+                    createEntity = !createEntity;
+                }
             ImGui::End();
         }
     ImGui::End();
@@ -197,7 +195,7 @@ void EditorUI::proprietiesPanel() const {
             // Entity Sprite
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
 
-            int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
+            static int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
             std::string currentAsset = AssetsManager::texturesNames[assetIndex];
 
             if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {

@@ -80,10 +80,10 @@ bool Editor::isRunning() { return window->isRunning(); }
 void Editor::renderEntities() {
     shaders[0]->UseShader();
 
+    entityManager->update(deltaTime);
+
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
-
-    entityManager->update(deltaTime);
 
     entityManager->render();
 }
