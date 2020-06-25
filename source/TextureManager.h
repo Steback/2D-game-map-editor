@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <GL/glew.h>
+#include "GL/glew.h"
 
 class TextureManager {
     public:

@@ -1,8 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <GL/glew.h>
-
+#include "GL/glew.h"
 #include "glm/glm.hpp"
 
 struct Shape {

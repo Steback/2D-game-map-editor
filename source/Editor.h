@@ -4,10 +4,7 @@
 #include <vector>
 #include <memory>
 
-// OpenGL loader
-#include <GL/glew.h>
-
-// Include glfw3.h after our OpenGL definitions
+#include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
 class Window;
