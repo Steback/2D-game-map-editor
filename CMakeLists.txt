@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 # Editor Source Files
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-# GLEW source files
-file(GLOB GLEW_SOURCE ${PROJECT_SOURCE_DIR}/lib/glew/src/glew.c)
-
 # Dear ImGui Source Files
 file(GLOB IMGUI_SOURCE ${PROJECT_SOURCE_DIR}/lib/imgui/*.cpp)
 
@@ -25,7 +22,7 @@ set_target_properties(
 find_package(OpenGL REQUIRED)
 
 # GLEW
-include_directories(${PROJECT_SOURCE_DIR}/lib/glew/include)
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/glew-cmake)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
