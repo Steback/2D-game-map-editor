@@ -59,20 +59,6 @@ void EditorUI::mainMenuBar() {
 
             ImGui::EndMenu();
         }
-
-        if ( ImGui::BeginMenu("Edit") ) {
-            if ( ImGui::MenuItem("Undo", "CTRL+Z") ) {  }
-            if ( ImGui::MenuItem("Redo", "CTRL+Y", false, false) ) {}  // Disabled item
-
-            ImGui::Separator();
-
-            if ( ImGui::MenuItem("Cut", "CTRL+X") ) {  }
-            if ( ImGui::MenuItem("Copy", "CTRL+C") ) {  }
-            if ( ImGui::MenuItem("Paste", "CTRL+V") ) {  }
-
-            ImGui::EndMenu();
-        }
-
         ImGui::EndMainMenuBar();
     }
 
@@ -86,14 +72,13 @@ void EditorUI::entitiesPanel() {
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
-        int entityIndex = 1;
-        for ( auto & entityName : EntityManager::entitiesID ) {
-            if ( entityIndex % 2 == 0 ) ImGui::SameLine();
+        for ( int i = 0; i < entitiesID.size(); i++ ) {
+            Entity* entity = Editor::entityManager->getEntityByID(entitiesID[i]);
+            auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
 
-            ImGui::Image( (void*)(intptr_t)Editor::assetsManager->getTexture(entityName.second.first)->getTextureID(),
-                          ImVec2(60, 60) );
+            if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
-            entityIndex++;
+            ImGui::Image( (void*)(intptr_t)entitySprite->texture->getTextureID(),ImVec2(60, 60) );
         }
 
         // TODO: Create Entities
@@ -107,7 +92,6 @@ void EditorUI::entitiesPanel() {
                 ImGui::InputText("Entity Name", &entityName[0], entityName.size());
 
                 // Entity Layer
-                std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
                 static int layerIndex = 0;
                 std::string currentLayer = layerTypes[layerIndex];
 
@@ -159,7 +143,7 @@ void EditorUI::entitiesPanel() {
                     entity.addComponent<TransformComponent>(glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, 2.0f),
                                                             0.0f, glm::vec2(0.0f, 0.0f));
 
-                    entity.addComponent<SpriteComponent>(currentAsset);
+                    entity.addComponent<SpriteComponent>(currentAsset, assetIndex);
 
                     entity.addComponent<MeshComponent>( std::vector<Shape> {
                             { glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
@@ -171,7 +155,7 @@ void EditorUI::entitiesPanel() {
                             0, 3, 2
                     } );
 
-                    EntityManager::entitiesID.emplace_back(entity.ID(), std::pair(currentAsset, assetIndex));
+                    entitiesID.emplace_back(entity.ID());
 
                     layerIndex = 0;
                     assetIndex = 0;
@@ -184,54 +168,58 @@ void EditorUI::entitiesPanel() {
     ImGui::End();
 }
 
-void EditorUI::proprietiesPanel() const {
+void EditorUI::proprietiesPanel() {
     ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y  * 0.6f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.4f ) ), ImGuiCond_Always);
 
     ImGui::Begin("Proprieties", nullptr, windowFlags);
-        if ( !EntityManager::entitiesID.empty() ) {
-            Entity* entity = Editor::entityManager->getEntityByID(EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].first);
+        if ( !entitiesID.empty() ) {
+            Entity* entity = Editor::entityManager->getEntityByID(entitiesID.size());
+
+            ImGui::Text("Entity ID: %i", entity->ID());
+
+            // Entity Name
+            char* entityName = &entity->name[0];
+            ImGui::InputText("Name", entityName, 30);
+            entity->name = entityName;
 
             // Entity Sprite
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
 
-            static int assetIndex = EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.second;
-            std::string currentAsset = AssetsManager::texturesNames[assetIndex];
+            char* currentSprite = &AssetsManager::texturesNames[entitySprite->spriteIndex][0];
 
-            if ( ImGui::BeginCombo("Sprite", &currentAsset[0]) ) {
+            if ( ImGui::BeginCombo("Sprite", currentSprite) ) {
                 for ( int i = 0; i < AssetsManager::texturesNames.size(); i++ ) {
-                    const bool isSelected = ( assetIndex == i );
+                    const bool isSelected = ( entitySprite->spriteIndex == i );
 
                     if ( ImGui::Selectable(&AssetsManager::texturesNames[i][0], isSelected ) ) {
-                        assetIndex = i;
+                        entitySprite->spriteIndex = i;
                     }
 
-                    if ( isSelected ) ImGui::SetItemDefaultFocus();
+                    ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture(AssetsManager::texturesNames[i])->getTextureID(),
+                                 ImVec2(60, 60));
+
+                    if ( isSelected )
+                        ImGui::SetItemDefaultFocus();
                 }
 
                 ImGui::EndCombo();
             }
 
-            entitySprite->texture = Editor::assetsManager->getTexture(currentAsset);
-            EntityManager::entitiesID[EntityManager::entitiesID.size() - 1].second.first = currentAsset;
+            entitySprite->texture = Editor::assetsManager->getTexture(currentSprite);
 
             ImGui::Image((void*)(intptr_t)entitySprite->texture->getTextureID(), ImVec2(60, 60));
 
-            // Entity Name
-            ImGui::InputText("Name", &entity->name[0], 30);
-
             // Entity Layer
-            std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
-            static int layerIndex = entity->layer - 1;
-            std::string currentLayer = layerTypes[layerIndex];
+
+            std::string currentLayer = layerTypes[entity->layer - 1];
 
             if ( ImGui::BeginCombo("Layer", &currentLayer[0]) ) {
                 for ( int i = 0; i < layerTypes.size(); i++ ) {
-                    const bool isSelected = ( layerIndex == i );
+                    const bool isSelected = ( entity->layer == (i + 1) );
 
                     if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
-                        layerIndex = i;
-                        entity->layer = static_cast<LayerType>(layerIndex + 1);
+                        entity->layer = static_cast<LayerType>(i + 1);
                     }
 
                     if ( isSelected )

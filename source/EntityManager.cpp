@@ -1,8 +1,6 @@
 #include "EntityManager.h"
 #include "Entity.h"
 
-std::vector<std::pair<unsigned int, std::pair<std::string, unsigned int> > > EntityManager::entitiesID;
-
 EntityManager::~EntityManager() { destroy(); }
 
 void EntityManager::initialize() {
@@ -39,23 +37,9 @@ Entity& EntityManager::addEntity(const unsigned int& id, const std::string& _ent
     return *entity;
 }
 
-std::vector<Entity*> EntityManager::getEntities() const { return entities; }
-
-Entity* EntityManager::getEntityByName(const std::string& entityName) const {
-    for ( auto& entity : entities ) {
-        if ( entity->name == entityName ) {
-            return entity;
-        }
-    }
-
-    return nullptr;
-}
-
 Entity *EntityManager::getEntityByID(const unsigned int &id) const {
-    for ( auto& entity : entities) {
-        if ( entity->ID() == id ) {
-            return entity;
-        }
+    if ( !entities.empty() ) {
+        return entities[id - 1];
     }
 
     return nullptr;

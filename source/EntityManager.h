@@ -17,12 +17,9 @@ class EntityManager {
         void render() const;
         void destroy();
         Entity& addEntity(const unsigned int& id, const std::string& _entityName, LayerType _layer);
-        std::vector<Entity*> getEntities() const;
         std::vector<Entity*> getEntitiesLayer(LayerType _layer) const;
-        Entity* getEntityByName(const std::string& entityName) const;
         Entity* getEntityByID(const unsigned int& id) const;
         unsigned int entitiesCount() const;
-        static std::vector<std::pair<unsigned int, std::pair<std::string, unsigned int> > > entitiesID;
 
 private:
         std::vector<Entity*> entities;

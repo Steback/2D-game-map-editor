@@ -36,7 +36,7 @@ void Editor::initialized() {
     entityManager = std::make_unique<EntityManager>();
     assetsManager = std::make_unique<AssetsManager>();
 
-    shaders.push_back(std::make_unique<Shader>("shaders/vertexShader.vert", "shaders/fragmentShader.frag"));
+    shaders.push_back(std::make_unique<Shader>("shaders/model.vert", "shaders/model.frag"));
 
     tinyxml2::XMLDocument assets;
 

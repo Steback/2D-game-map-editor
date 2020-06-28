@@ -9,7 +9,7 @@ file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 # Dear ImGui Source Files
 file(GLOB IMGUI_SOURCE ${PROJECT_SOURCE_DIR}/lib/imgui/*.cpp)
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${GLEW_SOURCE} ${IMGUI_SOURCE})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 set_target_properties(

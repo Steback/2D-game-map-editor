@@ -1,6 +1,7 @@
 #ifndef EDITOR_UI_H
 #define EDITOR_UI_H
 
+#include <utility>
 #include <vector>
 
 #include "imgui.h"
@@ -15,7 +16,7 @@ class EditorUI {
         void renderUI();
         void mainMenuBar();
         void entitiesPanel();
-        void proprietiesPanel() const;
+        void proprietiesPanel();
         void tilesMapPanel() const;
         void getVersions();
 
@@ -25,6 +26,8 @@ class EditorUI {
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
         bool createEntity{};
+        std::vector<unsigned int> entitiesID;
+        std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
 };
 
 #endif
