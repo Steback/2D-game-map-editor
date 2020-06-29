@@ -29,6 +29,9 @@ void Window::initialized() {
 
     glfwGetFramebufferSize(window, &bufferWidth, &bufferHeight);
 
+    glfwSetCursorPosCallback(window, mousePosition);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+
     glfwMakeContextCurrent(window);
 
     glewExperimental = GL_TRUE;
@@ -64,3 +67,17 @@ void Window::destroy() const {
 GLFWwindow * Window::getWindow() { return window; }
 
 glm::vec2 Window::getWindowSize() { return windowSize; }
+
+void Window::mousePosition(GLFWwindow *window, double x, double y) {
+
+}
+
+void Window::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        
+    }
+}
+
+void Window::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+
+}
