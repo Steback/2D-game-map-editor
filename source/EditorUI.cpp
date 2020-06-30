@@ -41,33 +41,36 @@ void EditorUI::updateMouseInput() {
 void EditorUI::selectEntity(glm::vec2 _mousePos) {
     std::vector<bool> points(4);
 
-    std::cout << _mousePos.x << " " << _mousePos.y << '\n';
-
     for ( int i = 0; i < Editor::entityManager->entitiesCount(); i++ ) {
         Entity* entity = Editor::entityManager->getEntityByID(i + 1);
         auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
 
-        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) &&
-                _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) ) {
-            points[0] = true;
+        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
+             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
+             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+             _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+             ImGui::IsMouseClicked(0) )  {
+            entitySelected = nullptr;
+            entitySelected = entity;
         }
 
-        if ( _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) &&
-             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) ) {
-            points[1] = true;
+        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
+             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
+             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+             _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+             ImGui::IsMouseDown(0) )  {
+            entityTransform->translate.x = _mousePos.x;
+            entityTransform->translate.y = _mousePos.y;
+            entitySelected = entity;
         }
-
-        if ( _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) &&
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) ) {
-            points[2] = true;
-        }
-
-        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) &&
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) ) {
-            points[3] = true;
-        }
-
-        if ( points[0] && points[1] && points[2] && points[3] && ImGui::IsMouseClicked(0) ) entitySelected = entity;
     }
 }
 
