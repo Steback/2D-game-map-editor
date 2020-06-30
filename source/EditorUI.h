@@ -8,6 +8,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+class Entity;
+
 class EditorUI {
     public:
         explicit EditorUI(ImGuiIO& _io);
@@ -19,6 +21,8 @@ class EditorUI {
         void proprietiesPanel();
         void tilesMapPanel() const;
         void getVersions();
+
+        Entity* entitySelected;
 
     private:
         ImGuiIO& io;

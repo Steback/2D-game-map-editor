@@ -6,7 +6,7 @@
 #include "AssetsManager.h"
 #include "Entity.h"
 
-EditorUI::EditorUI(ImGuiIO& _io) : io(_io) {  }
+EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr) {  }
 
 EditorUI::~EditorUI() = default;
 
@@ -33,7 +33,8 @@ void EditorUI::renderUI() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-    
+
+    ImGui::ShowDemoWindow();
     mainMenuBar();
     entitiesPanel();
     proprietiesPanel();
@@ -173,18 +174,16 @@ void EditorUI::proprietiesPanel() {
     ImGui::SetNextWindowSize(ImVec2(200, ( io.DisplaySize.y * 0.4f ) ), ImGuiCond_Always);
 
     ImGui::Begin("Proprieties", nullptr, windowFlags);
-        if ( !entitiesID.empty() ) {
-            Entity* entity = Editor::entityManager->getEntityByID(entitiesID.size());
-
-            ImGui::Text("Entity ID: %i", entity->ID());
+        if ( entitySelected != nullptr ) {
+            ImGui::Text("Entity ID: %i", entitySelected->ID());
 
             // Entity Name
-            char* entityName = &entity->name[0];
+            char* entityName = &entitySelected->name[0];
             ImGui::InputText("Name", entityName, 30);
-            entity->name = entityName;
+            entitySelected->name = entityName;
 
             // Entity Sprite
-            auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
+            auto* entitySprite = dynamic_cast<SpriteComponent*>(entitySelected->components[1]);
 
             char* currentSprite = &AssetsManager::texturesNames[entitySprite->spriteIndex][0];
 
@@ -212,14 +211,14 @@ void EditorUI::proprietiesPanel() {
 
             // Entity Layer
 
-            std::string currentLayer = layerTypes[entity->layer - 1];
+            std::string currentLayer = layerTypes[entitySelected->layer - 1];
 
             if ( ImGui::BeginCombo("Layer", &currentLayer[0]) ) {
                 for ( int i = 0; i < layerTypes.size(); i++ ) {
-                    const bool isSelected = ( entity->layer == (i + 1) );
+                    const bool isSelected = ( entitySelected->layer == (i + 1) );
 
                     if ( ImGui::Selectable(&layerTypes[i][0], isSelected ) ) {
-                        entity->layer = static_cast<LayerType>(i + 1);
+                        entitySelected->layer = static_cast<LayerType>(i + 1);
                     }
 
                     if ( isSelected )
@@ -230,7 +229,7 @@ void EditorUI::proprietiesPanel() {
             }
 
             // Entity Transform
-            auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+            auto* entityTransform = dynamic_cast<TransformComponent*>(entitySelected->components[0]);
 
             ImGui::InputFloat("X", &entityTransform->translate.x, 1);
             ImGui::InputFloat("Y", &entityTransform->translate.y, 1);
