@@ -29,18 +29,46 @@ void EditorUI::initialized(GLFWwindow* _window) {
     windowFlags |= ImGuiWindowFlags_NoResize;
 }
 
-void EditorUI::renderUI() {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+void EditorUI::updateMouseInput() {
+    glm::vec2 mousePos;
+    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * 100) - (100 / 2);
+    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * 100) - (100 / 2);
 
-    ImGui::ShowDemoWindow();
-    mainMenuBar();
-    entitiesPanel();
-    proprietiesPanel();
-    tilesMapPanel();
+    selectEntity(mousePos);
+}
 
-    ImGui::Render();
+
+void EditorUI::selectEntity(glm::vec2 _mousePos) {
+    std::vector<bool> points(4);
+
+    std::cout << _mousePos.x << " " << _mousePos.y << '\n';
+
+    for ( int i = 0; i < Editor::entityManager->entitiesCount(); i++ ) {
+        Entity* entity = Editor::entityManager->getEntityByID(i + 1);
+        auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+
+        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) &&
+                _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) ) {
+            points[0] = true;
+        }
+
+        if ( _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) &&
+             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) ) {
+            points[1] = true;
+        }
+
+        if ( _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) &&
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) ) {
+            points[2] = true;
+        }
+
+        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) &&
+             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) ) {
+            points[3] = true;
+        }
+
+        if ( points[0] && points[1] && points[2] && points[3] && ImGui::IsMouseClicked(0) ) entitySelected = entity;
+    }
 }
 
 void EditorUI::mainMenuBar() {
@@ -264,4 +292,17 @@ void EditorUI::getVersions() {
             ImGui::Text("Renderer: %s", glGetString(GL_RENDERER) );
         ImGui::End();
     }
+}
+
+void EditorUI::renderUI() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    mainMenuBar();
+    entitiesPanel();
+    proprietiesPanel();
+    tilesMapPanel();
+
+    ImGui::Render();
 }

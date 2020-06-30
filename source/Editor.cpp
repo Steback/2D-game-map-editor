@@ -80,6 +80,8 @@ bool Editor::isRunning() { return window->isRunning(); }
 void Editor::renderEntities() {
     shaders[0]->UseShader();
 
+    ui->updateMouseInput();
+
     entityManager->update(deltaTime);
 
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
