@@ -111,7 +111,10 @@ void EditorUI::entitiesPanel() {
 
             if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
-            ImGui::Image( (void*)(intptr_t)entitySprite->texture->getTextureID(),ImVec2(60, 60) );
+            if ( ImGui::ImageButton( (void*)(intptr_t)entitySprite->texture->getTextureID(),ImVec2(60, 60),
+                    ImVec2(0, 0), ImVec2(1, 1), 0) ) {
+                entitySelected = entity;
+            }
         }
 
         // TODO: Create Entities
@@ -277,8 +280,10 @@ void EditorUI::tilesMapPanel() const {
         for ( int i = 0; i < 30; i++ ) {
             if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
-            ImGui::Image((void*)(intptr_t)Editor::assetsManager->getTexture("tile-" + std::to_string(i + 1))->getTextureID(),
-                         ImVec2(60, 60));
+            if ( ImGui::ImageButton((void*)(intptr_t)Editor::assetsManager->getTexture("tile-" + std::to_string(i + 1))->getTextureID(),
+                    ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), 0) ) {
+
+            }
         }
     ImGui::End();
 }
