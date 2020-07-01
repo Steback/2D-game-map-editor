@@ -42,10 +42,14 @@ include_directories(${PROJECT_SOURCE_DIR}/lib/imgui)
 #  TinyXML2
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/tinyxml2)
 
+# {fmt}
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fmt)
+
 target_link_libraries(${PROJECT_NAME}
         OpenGL::GL
         GLEW
         glfw
         glm
         tinyxml2
+        fmt
         )

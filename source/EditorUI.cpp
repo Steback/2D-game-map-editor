@@ -1,4 +1,4 @@
-#include <iostream>
+#include "fmt/core.h"
 
 #include "EditorUI.h"
 #include "Editor.h"
@@ -31,8 +31,10 @@ void EditorUI::initialized(GLFWwindow* _window) {
 
 void EditorUI::updateMouseInput() {
     glm::vec2 mousePos;
-    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * 100) - (100 / 2);
-    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * 100) - (100 / 2);
+    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * MAX_WINDOW_GL_WIDTH) - (MAX_WINDOW_GL_WIDTH / 2);
+    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * MAX_WINDOW_GL_HEIGHT) - (MAX_WINDOW_GL_HEIGHT / 2);
+
+    mousePos.y *= -1;
 
     selectEntity(mousePos);
 }
@@ -67,8 +69,7 @@ void EditorUI::selectEntity(glm::vec2 _mousePos) {
              _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
              _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
              ImGui::IsMouseDown(0) )  {
-            entityTransform->translate.x = _mousePos.x;
-            entityTransform->translate.y = _mousePos.y;
+            entityTransform->translate = _mousePos;
             entitySelected = entity;
         }
     }

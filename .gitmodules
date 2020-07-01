@@ -16,3 +16,6 @@
 	path = lib/glew-cmake
 	url = git@github.com:Perlmint/glew-cmake.git
 	branch = glew-cmake-release
+[submodule "lib/fmt"]
+	path = lib/fmt
+	url = git@github.com:fmtlib/fmt.git
