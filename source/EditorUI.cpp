@@ -68,9 +68,8 @@ void EditorUI::selectEntity(glm::vec2 _mousePos) {
              _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
              _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
              _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
-             ImGui::IsMouseDown(0) )  {
+             ImGui::IsMouseDown(0) && entitySelected == entity )  {
             entityTransform->translate = _mousePos;
-            entitySelected = entity;
         }
     }
 }
@@ -105,6 +104,7 @@ void EditorUI::entitiesPanel() {
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
+        // TODO: Show entities
         for ( int i = 0; i < entitiesID.size(); i++ ) {
             Entity* entity = Editor::entityManager->getEntityByID(entitiesID[i]);
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
