@@ -14,6 +14,7 @@ class Mesh;
 class Shader;
 class AssetsManager;
 class EntityManager;
+class Map;
 
 class Editor {
     public:
@@ -28,6 +29,8 @@ class Editor {
         static std::unique_ptr<AssetsManager> assetsManager;
         static std::unique_ptr<EntityManager> entityManager;
         static std::vector<std::unique_ptr<Shader> > shaders;
+        static std::unique_ptr<Map> map;
+        static std::unique_ptr<EntityManager> tileManager;
 
     private:
         std::unique_ptr<Window> window;

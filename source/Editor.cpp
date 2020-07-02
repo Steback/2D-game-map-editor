@@ -10,11 +10,14 @@
 #include "Entity.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"
+#include "Map.h"
 
 // TODO: Statics objects
 std::unique_ptr<AssetsManager> Editor::assetsManager;
 std::unique_ptr<EntityManager> Editor::entityManager;
 std::vector<std::unique_ptr<Shader> > Editor::shaders;
+std::unique_ptr<Map> Editor::map;
+std::unique_ptr<EntityManager> Editor::tileManager;
 
 Editor::Editor() : window(new Window(WINDOW_WIDTH, WINDOW_HEIGHT)) {  }
 
@@ -35,6 +38,7 @@ void Editor::initialized() {
 
     entityManager = std::make_unique<EntityManager>();
     assetsManager = std::make_unique<AssetsManager>();
+    tileManager = std::make_unique<EntityManager>();
 
     shaders.push_back(std::make_unique<Shader>("shaders/model.vert", "shaders/model.frag"));
 
@@ -72,6 +76,10 @@ void Editor::initialized() {
 
     assetsManager->loadTextures();
 
+    map = std::make_unique<Map>(glm::vec2(26, 20), 4);
+    map->loadMap();
+
+    tileManager->initialize();
     entityManager->initialize();
 }
 
@@ -80,13 +88,13 @@ bool Editor::isRunning() { return window->isRunning(); }
 void Editor::renderEntities() {
     shaders[0]->UseShader();
 
-    ui->updateMouseInput();
-
+    tileManager->update(deltaTime);
     entityManager->update(deltaTime);
 
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
 
+    tileManager->render();
     entityManager->render();
 }
 
@@ -96,6 +104,8 @@ void Editor::render() {
     lastTime = now;
 
     glfwPollEvents();
+
+    ui->updateMouseInput();
 
     window->render();
     ui->renderUI();
