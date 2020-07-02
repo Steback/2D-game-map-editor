@@ -10,8 +10,8 @@ Map::Map(const glm::vec2& _sizeMap, unsigned int _tileSize)
 Map::~Map() = default;
 
 void Map::loadMap() {
-    for ( int i = 0; i < sizeMap.y; i++ ) {
-        for ( int j = 0; j < sizeMap.x; j++ ) {
+    for ( int i = 0; i < static_cast<int>(sizeMap.y); i++ ) {
+        for ( int j = 0; j < static_cast<int>(sizeMap.x); j++ ) {
             glm::vec2 tPos;
 
             tPos.x = -( ( sizeMap.x * static_cast<float>(tileSize) ) / 2 );
