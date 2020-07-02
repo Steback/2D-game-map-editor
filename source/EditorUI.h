@@ -10,6 +10,7 @@
 #include "glm/glm.hpp"
 
 class Entity;
+class TextureManager;
 
 class EditorUI {
     public:
@@ -21,11 +22,12 @@ class EditorUI {
         void mainMenuBar();
         void entitiesPanel();
         void proprietiesPanel();
-        void tilesMapPanel() const;
+        void tilesMapPanel();
         void getVersions();
         void renderUI();
 
         Entity* entitySelected;
+        std::pair<std::string, std::shared_ptr<TextureManager> > tileSelected;
 
     private:
         ImGuiIO& io;

@@ -6,7 +6,7 @@
 
 #include "TextureManager.h"
 
-TextureManager::TextureManager(std::string  _filePath) : filePath(std::move(_filePath)) {  }
+TextureManager::TextureManager(std::string _filePath) : filePath(std::move(_filePath)) {  }
 
 TextureManager::~TextureManager() { clearTexture(); };
 
@@ -24,7 +24,7 @@ bool TextureManager::loadTexture() {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-    float colour[4] = {0.0f, 0.0f, 1.0f, 1.0f};
+    float colour[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colour);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

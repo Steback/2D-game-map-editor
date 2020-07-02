@@ -5,8 +5,9 @@
 #include "EntityManager.h"
 #include "AssetsManager.h"
 #include "Entity.h"
+#include "components/TileComponent.h"
 
-EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr) {  }
+EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr) {  }
 
 EditorUI::~EditorUI() = default;
 
@@ -43,33 +44,52 @@ void EditorUI::updateMouseInput() {
 void EditorUI::selectEntity(glm::vec2 _mousePos) {
     std::vector<bool> points(4);
 
-    for ( int i = 0; i < Editor::entityManager->entitiesCount(); i++ ) {
-        Entity* entity = Editor::entityManager->getEntityByID(i + 1);
-        auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+    if ( io.MousePos.x > 200 && io.MousePos.x < (io.DisplaySize.x - 200) ) {
+        for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
+            Entity* tile = Editor::tileManager->getEntityByID(i + 1);
+            auto* tileComponent = dynamic_cast<TileComponent*>(tile->components[0]);
 
-        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
-             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
-             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
-             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
-             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
-             _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
-             ImGui::IsMouseClicked(0) )  {
-            entitySelected = nullptr;
-            entitySelected = entity;
+            if ( _mousePos.x >= (tileComponent->tilePos.x - tileComponent->tileSize.x) && // Left up
+                 _mousePos.y <= (tileComponent->tilePos.y + tileComponent->tileSize.y) &&
+                 _mousePos.x <= (tileComponent->tilePos.x + tileComponent->tileSize.x) && // Right up
+                 _mousePos.y <= (tileComponent->tilePos.y + tileComponent->tileSize.y) &&
+                 _mousePos.x <= (tileComponent->tilePos.x + tileComponent->tileSize.x) && // Right down
+                 _mousePos.y >= (tileComponent->tilePos.y - tileComponent->tileSize.y) &&
+                 _mousePos.x >= (tileComponent->tilePos.x - tileComponent->tileSize.x) && // Left down
+                 _mousePos.y >= (tileComponent->tilePos.y - tileComponent->tileSize.y) &&
+                 ImGui::IsMouseClicked(0) )  {
+                tileComponent->tileTexture = tileSelected.second;
+            }
         }
 
-        if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
-             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
-             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
-             _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
-             _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
-             _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
-             _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
-             ImGui::IsMouseDown(0) && entitySelected == entity )  {
-            entityTransform->translate = _mousePos;
+        for ( int i = 0; i < Editor::entityManager->entitiesCount(); i++ ) {
+            Entity* entity = Editor::entityManager->getEntityByID(i + 1);
+            auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+
+            if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
+                 _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+                 _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
+                 _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+                 _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
+                 _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+                 _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
+                 _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+                 ImGui::IsMouseClicked(0) )  {
+                entitySelected = nullptr;
+                entitySelected = entity;
+            }
+
+            if ( _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left up
+                 _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+                 _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right up
+                 _mousePos.y <= (entityTransform->translate.y + entityTransform->scale.y) &&
+                 _mousePos.x <= (entityTransform->translate.x + entityTransform->scale.x) && // Right down
+                 _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+                 _mousePos.x >= (entityTransform->translate.x - entityTransform->scale.x) && // Left down
+                 _mousePos.y >= (entityTransform->translate.y - entityTransform->scale.y) &&
+                 ImGui::IsMouseDown(0) && entitySelected == entity )  {
+                entityTransform->translate = _mousePos;
+            }
         }
     }
 }
@@ -245,7 +265,6 @@ void EditorUI::proprietiesPanel() {
             ImGui::Image((void*)(intptr_t)entitySprite->texture->getTextureID(), ImVec2(60, 60));
 
             // Entity Layer
-
             std::string currentLayer = layerTypes[entitySelected->layer - 1];
 
             if ( ImGui::BeginCombo("Layer", &currentLayer[0]) ) {
@@ -272,18 +291,35 @@ void EditorUI::proprietiesPanel() {
     ImGui::End();
 }
 
-void EditorUI::tilesMapPanel() const {
+void EditorUI::tilesMapPanel() {
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200,22), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y - 22), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, (io.DisplaySize.y * 0.6f) - 22), ImGuiCond_Always);
 
     ImGui::Begin("Tiles Map", nullptr, windowFlags);
         for ( int i = 0; i < 30; i++ ) {
+            std::string tileName = "tile-" + std::to_string(i + 1);
+            std::shared_ptr<TextureManager> tile = Editor::assetsManager->getTexture(tileName);
+
             if ( ( i + 1 ) % 2 == 0 ) ImGui::SameLine();
 
-            if ( ImGui::ImageButton((void*)(intptr_t)Editor::assetsManager->getTexture("tile-" + std::to_string(i + 1))->getTextureID(),
+            if ( ImGui::ImageButton((void*)(intptr_t)tile->getTextureID(),
                     ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), 0) ) {
-
+                tileSelected = std::pair("", nullptr);
+                tileSelected = std::pair(tileName, tile);
             }
+        }
+    ImGui::End();
+
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200, io.DisplaySize.y * 0.6f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(200, io.DisplaySize.y * 0.4f), ImGuiCond_Always);
+
+    ImGui::Begin("Tile Selected", nullptr, windowFlags);
+        if ( tileSelected.second != nullptr ) {
+            ImGui::Text("Tile Name: %s", &tileSelected.first[0]);
+
+            ImGui::SetCursorPos(ImVec2((200 - 100) * 0.5f, ((io.DisplaySize.y * 0.4f) - 100) * 0.5f));
+
+            ImGui::Image((void*)(intptr_t)tileSelected.second->getTextureID(), ImVec2(100, 100));
         }
     ImGui::End();
 }
