@@ -76,11 +76,8 @@ void Editor::initialized() {
 
     assetsManager->loadTextures();
 
-    map = std::make_unique<Map>(glm::vec2(26, 20), 4);
+    map = std::make_unique<Map>(glm::vec2(26, 20), 4.0f);
     map->loadMap();
-
-    tileManager->initialize();
-    entityManager->initialize();
 }
 
 bool Editor::isRunning() { return window->isRunning(); }

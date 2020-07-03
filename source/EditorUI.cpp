@@ -45,20 +45,22 @@ void EditorUI::selectEntity(glm::vec2 _mousePos) {
     std::vector<bool> points(4);
 
     if ( io.MousePos.x > 200 && io.MousePos.x < (io.DisplaySize.x - 200) ) {
-        for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
-            Entity* tile = Editor::tileManager->getEntityByID(i + 1);
-            auto* tileComponent = dynamic_cast<TileComponent*>(tile->components[0]);
+        if ( !createEntity && tileSelected.second != nullptr ) {
+            for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
+                Entity* tile = Editor::tileManager->getEntityByID(i + 1);
+                auto* tileComponent = dynamic_cast<TileComponent*>(tile->components[0]);
 
-            if ( _mousePos.x >= (tileComponent->tilePos.x - tileComponent->tileSize.x) && // Left up
-                 _mousePos.y <= (tileComponent->tilePos.y + tileComponent->tileSize.y) &&
-                 _mousePos.x <= (tileComponent->tilePos.x + tileComponent->tileSize.x) && // Right up
-                 _mousePos.y <= (tileComponent->tilePos.y + tileComponent->tileSize.y) &&
-                 _mousePos.x <= (tileComponent->tilePos.x + tileComponent->tileSize.x) && // Right down
-                 _mousePos.y >= (tileComponent->tilePos.y - tileComponent->tileSize.y) &&
-                 _mousePos.x >= (tileComponent->tilePos.x - tileComponent->tileSize.x) && // Left down
-                 _mousePos.y >= (tileComponent->tilePos.y - tileComponent->tileSize.y) &&
-                 ImGui::IsMouseClicked(0) )  {
-                tileComponent->tileTexture = tileSelected.second;
+                if ( _mousePos.x >= (tileComponent->tilePos.x - (tileComponent->tileSize.x - 2)) && // Left up
+                     _mousePos.y <= (tileComponent->tilePos.y + (tileComponent->tileSize.y - 2)) &&
+                     _mousePos.x <= (tileComponent->tilePos.x + (tileComponent->tileSize.x - 2)) && // Right up
+                     _mousePos.y <= (tileComponent->tilePos.y + (tileComponent->tileSize.y - 2)) &&
+                     _mousePos.x <= (tileComponent->tilePos.x + (tileComponent->tileSize.x - 2)) && // Right down
+                     _mousePos.y >= (tileComponent->tilePos.y - (tileComponent->tileSize.y - 2)) &&
+                     _mousePos.x >= (tileComponent->tilePos.x - (tileComponent->tileSize.x - 2)) && // Left down
+                     _mousePos.y >= (tileComponent->tilePos.y - (tileComponent->tileSize.y - 2)) &&
+                     ImGui::IsMouseClicked(0) )  {
+                    tileComponent->tileTexture = tileSelected.second;
+                }
             }
         }
 

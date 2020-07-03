@@ -6,8 +6,8 @@ const unsigned int WINDOW_HEIGHT = 720;
 
 const unsigned int NUM_LAYERS = 7;
 
-const unsigned int MAX_WINDOW_GL_WIDTH = 100;
-const unsigned int MAX_WINDOW_GL_HEIGHT = 60;
+const float MAX_WINDOW_GL_WIDTH = 100.0f;
+const float MAX_WINDOW_GL_HEIGHT = 60.0f;
 
 enum LayerType {
     TILEMAP_LAYER = 0,
