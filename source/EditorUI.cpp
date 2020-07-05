@@ -1,5 +1,3 @@
-#include "fmt/core.h"
-
 #include "EditorUI.h"
 #include "Editor.h"
 #include "EntityManager.h"
@@ -7,12 +5,14 @@
 #include "Entity.h"
 #include "components/TileComponent.h"
 
-EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr) {  }
+#include "fmt/core.h"
+
+EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr), camOffSet(0.0f, 0.0f) {  }
 
 EditorUI::~EditorUI() = default;
 
 void EditorUI::initialized(GLFWwindow* _window) {
-    // TODO: Setup Dear ImGui style
+    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     style.WindowBorderSize = 0.0f;
     style.WindowRounding = 0;
@@ -22,20 +22,22 @@ void EditorUI::initialized(GLFWwindow* _window) {
     ImGui_ImplGlfw_InitForOpenGL(_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    // TODO: Load Font
+    // Load Font
     io.Fonts->AddFontFromFileTTF("assets/fonts/Karla-Regular.ttf", 16.0f);
 
-    // TODO: Window flags
+    // Window flags
     windowFlags |= ImGuiWindowFlags_NoCollapse;
     windowFlags |= ImGuiWindowFlags_NoResize;
 }
 
 void EditorUI::updateMouseInput() {
     glm::vec2 mousePos;
-    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * MAX_WINDOW_GL_WIDTH) - (MAX_WINDOW_GL_WIDTH / 2);
-    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * MAX_WINDOW_GL_HEIGHT) - (MAX_WINDOW_GL_HEIGHT / 2);
+    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * MAX_WINDOW_GL_WIDTH) - (MAX_WINDOW_GL_WIDTH / 2) - camOffSet.x;
+    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * MAX_WINDOW_GL_HEIGHT) - (MAX_WINDOW_GL_HEIGHT / 2) - camOffSet.y;
 
     mousePos.y *= -1;
+
+    fmt::print("{}, {}\n", mousePos.x, mousePos.y);
 
     selectEntity(mousePos);
 }
@@ -126,7 +128,7 @@ void EditorUI::entitiesPanel() {
     ImGui::Begin("Entities", nullptr, windowFlags);
         if ( ImGui::Button("Add Entity") ) createEntity = !createEntity;
 
-        // TODO: Show entities
+        // Show entities
         for ( int i = 0; i < entitiesID.size(); i++ ) {
             Entity* entity = Editor::entityManager->getEntityByID(entitiesID[i]);
             auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
@@ -139,7 +141,7 @@ void EditorUI::entitiesPanel() {
             }
         }
 
-        // TODO: Create Entities
+        // Create Entities
         if ( createEntity ) {
             ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
             ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
@@ -352,4 +354,16 @@ void EditorUI::renderUI() {
     tilesMapPanel();
 
     ImGui::Render();
+}
+
+glm::vec2 EditorUI::getMousePos() const {
+    return glm::vec2(io.MousePos.x, io.MousePos.y);
+}
+
+glm::vec2 EditorUI::getWindowSize() const {
+    return glm::vec2(io.DisplaySize.x, io.DisplaySize.y);
+}
+
+glm::vec2 EditorUI::getCamOffset() {
+    return camOffSet;
 }

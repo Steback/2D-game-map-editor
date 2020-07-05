@@ -44,7 +44,7 @@ void Editor::initialized() {
 
     tinyxml2::XMLDocument assets;
 
-    // TODO: Load tile assets
+    // Load tile assets
     if ( assets.LoadFile("assets/tilemap.xml") != tinyxml2::XML_SUCCESS ) {
         std::cerr << "Error loading XML file: assets/tilemap.xml" << '\n';
     }
@@ -58,7 +58,7 @@ void Editor::initialized() {
         asset = asset->NextSibling();
     }
 
-    // TODO: Load entities assets
+    // Load entities assets
     if ( assets.LoadFile("assets/images.xml") != tinyxml2::XML_SUCCESS ) {
         std::cerr << "Error loading XML file: assets/images.xml" << '\n';
     }
@@ -88,7 +88,7 @@ void Editor::renderEntities() {
     tileManager->update(deltaTime);
     entityManager->update(deltaTime);
 
-    glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getprojectionMatrix()));
+    glUniformMatrix4fv(shaders[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(camera->getProjectionMatrix()));
     glUniformMatrix4fv(shaders[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(camera->getViewMatrix()));
 
     tileManager->render();
@@ -103,6 +103,8 @@ void Editor::render() {
     glfwPollEvents();
 
     ui->updateMouseInput();
+
+    camera->setCamPos(ui->getMousePos(), ui->getWindowSize(), ui->getCamOffset());
 
     window->render();
     ui->renderUI();
