@@ -102,9 +102,9 @@ void Editor::render() {
 
     glfwPollEvents();
 
-    ui->updateMouseInput();
+    ui->updateMouseInput(camera->getCamOffset());
 
-    camera->setCamPos(ui->getMousePos(), ui->getWindowSize(), ui->getCamOffset());
+    camera->setCamPos(ui->getMousePos(), ui->getWindowSize());
 
     window->render();
     ui->renderUI();

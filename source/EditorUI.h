@@ -18,7 +18,7 @@ class EditorUI {
         explicit EditorUI(ImGuiIO& _io);
         ~EditorUI();
         void initialized(GLFWwindow* _window);
-        void updateMouseInput();
+        void updateMouseInput(const glm::vec2& _camOffset);
         void selectEntity(glm::vec2 _mousePos);
         void mainMenuBar();
         void entitiesPanel();
@@ -41,7 +41,6 @@ class EditorUI {
         bool createEntity{};
         std::vector<unsigned int> entitiesID;
         std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
-        glm::vec2 camOffSet;
 };
 
 #endif

@@ -12,7 +12,8 @@ class Camera {
         glm::mat4 getViewMatrix();
         glm::mat4 getProjectionMatrix() const;
         glm::vec3 getCameraPosition();
-        void setCamPos(const glm::vec2& _mousePos, const glm::vec2& _windowSize, glm::vec2 _camOffset);
+        void setCamPos(const glm::vec2& _mousePos, const glm::vec2& _windowSize);
+        glm::vec2 getCamOffset() const;
 
     private:
         glm::vec3 cameraPos;
@@ -21,6 +22,7 @@ class Camera {
         glm::vec3 center;
         GLfloat nearPlane;
         GLfloat farPlane;
+        glm::vec2 camOffset;
 };
 
 #endif

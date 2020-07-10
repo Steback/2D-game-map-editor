@@ -7,7 +7,7 @@
 
 #include "fmt/core.h"
 
-EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr), camOffSet(0.0f, 0.0f) {  }
+EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr) {  }
 
 EditorUI::~EditorUI() = default;
 
@@ -30,14 +30,12 @@ void EditorUI::initialized(GLFWwindow* _window) {
     windowFlags |= ImGuiWindowFlags_NoResize;
 }
 
-void EditorUI::updateMouseInput() {
+void EditorUI::updateMouseInput(const glm::vec2& _camOffset) {
     glm::vec2 mousePos;
-    mousePos.x = ((io.MousePos.x / WINDOW_WIDTH) * MAX_WINDOW_GL_WIDTH) - (MAX_WINDOW_GL_WIDTH / 2) - camOffSet.x;
-    mousePos.y = ((io.MousePos.y / WINDOW_HEIGHT) * MAX_WINDOW_GL_HEIGHT) - (MAX_WINDOW_GL_HEIGHT / 2) - camOffSet.y;
+    mousePos.x = io.MousePos.x / WINDOW_WIDTH * MAX_WINDOW_GL_WIDTH - (MAX_WINDOW_GL_WIDTH / 2);
+    mousePos.y = 1.0 - (io.MousePos.y / WINDOW_HEIGHT * MAX_WINDOW_GL_HEIGHT - (MAX_WINDOW_GL_HEIGHT / 2));
 
-    mousePos.y *= -1;
-
-    fmt::print("{}, {}\n", mousePos.x, mousePos.y);
+    mousePos -= _camOffset;
 
     selectEntity(mousePos);
 }
@@ -362,8 +360,4 @@ glm::vec2 EditorUI::getMousePos() const {
 
 glm::vec2 EditorUI::getWindowSize() const {
     return glm::vec2(io.DisplaySize.x, io.DisplaySize.y);
-}
-
-glm::vec2 EditorUI::getCamOffset() {
-    return camOffSet;
 }
