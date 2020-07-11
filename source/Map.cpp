@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "Map.h"
 #include "Entity.h"
 #include "Editor.h"
@@ -22,6 +24,8 @@ void Map::loadMap() {
 
             addTile(tPos,glm::vec2(tileSize, tileSize), "tile-1",
                     "Tile-" + std::to_string(tileMap.size() + 1));
+
+            tilesID.push_back(1);
         }
     }
 }
@@ -42,4 +46,39 @@ void Map::addTile(const glm::vec2& _tilePos, const glm::vec2& _scale, const std:
     } );
 
     tileMap.emplace_back(&entity);
+}
+
+void Map::createMapFile() {
+    std::ofstream mapFile;
+    mapFile.open("levels/level1.map", std::ios::out);
+
+    for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
+        mapFile << tilesID[i];
+
+        if ( (i + 1) % static_cast<int>(sizeMap.x) == 0 ) {
+            mapFile << '\n';
+        } else {
+            mapFile << ',';
+        }
+    }
+
+    mapFile << '\n';
+
+    for ( int i = 0; i < static_cast<int>(sizeMap.y); i++ ) {
+        for ( int j = 0; j < static_cast<int>(sizeMap.x); j++ ) {
+            if ( i == 0 || i == static_cast<int>(sizeMap.y) - 1 ) {
+                mapFile << '1';
+            } else if ( j == 0 || j == static_cast<int>(sizeMap.x) - 1 ) {
+                mapFile << '1';
+            } else {
+                mapFile << '0';
+            }
+
+            if ( j + 1 != static_cast<int>(sizeMap.x) ) mapFile << ',';
+        }
+
+        mapFile << '\n';
+    }
+
+    mapFile.close();
 }

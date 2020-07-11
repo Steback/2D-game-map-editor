@@ -4,6 +4,7 @@
 #include "AssetsManager.h"
 #include "Entity.h"
 #include "components/TileComponent.h"
+#include "Map.h"
 
 #include "fmt/core.h"
 
@@ -60,6 +61,9 @@ void EditorUI::selectEntity(glm::vec2 _mousePos) {
                      _mousePos.y >= (tileComponent->tilePos.y - (tileComponent->tileSize.y - 2)) &&
                      ImGui::IsMouseClicked(0) )  {
                     tileComponent->tileTexture = tileSelected.second;
+                    int idx = tileSelected.first.rfind('-');
+                    std::string tileID = tileSelected.first.substr(idx + 1);
+                    Editor::map->tilesID[i] = std::stoi(tileID);
                 }
             }
         }
@@ -102,8 +106,7 @@ void EditorUI::mainMenuBar() {
         if ( ImGui::BeginMenu("File") ) {
             if ( ImGui::MenuItem("New") ) {  }
             if ( ImGui::MenuItem("Open", "Ctrl+O") ) {  }
-            if ( ImGui::MenuItem("Save", "Ctrl+S") ) {  }
-            if ( ImGui::MenuItem("Save As..") ) { }
+            if ( ImGui::MenuItem("Save", "Ctrl+S") ) { Editor::map->createMapFile(); }
 
             ImGui::Separator();
 

@@ -14,6 +14,9 @@ class Map {
         ~Map();
         void loadMap();
         void addTile(const glm::vec2& _tilePos, const glm::vec2& _scale, const std::string& _textureID, const std::string& _tileName);
+        void createMapFile();
+
+        std::vector<int> tilesID;
 
     private:
         std::vector<Entity*> tileMap;
