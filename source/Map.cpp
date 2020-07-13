@@ -53,6 +53,8 @@ void Map::createMapFile() {
     mapFile.open("levels/level1.map", std::ios::out);
 
     for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
+        if ( tilesID[i] < 10 ) mapFile << 0;
+
         mapFile << tilesID[i];
 
         if ( (i + 1) % static_cast<int>(sizeMap.x) == 0 ) {
