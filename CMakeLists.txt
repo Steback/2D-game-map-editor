@@ -22,7 +22,7 @@ set_target_properties(
 find_package(OpenGL REQUIRED)
 
 # GLEW
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/glew-cmake)
+find_package(GLEW REQUIRED)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -52,5 +52,4 @@ target_link_libraries(${PROJECT_NAME}
         glm
         tinyxml2
         fmt
-        LuaLib
         )
