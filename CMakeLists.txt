@@ -45,6 +45,9 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/lib/tinyxml2)
 # {fmt}
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fmt)
 
+# Lua
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/lua)
+
 target_link_libraries(${PROJECT_NAME}
         OpenGL::GL
         GLEW
@@ -52,4 +55,5 @@ target_link_libraries(${PROJECT_NAME}
         glm
         tinyxml2
         fmt
+        LuaLib
         )
