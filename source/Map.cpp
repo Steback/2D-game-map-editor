@@ -1,4 +1,5 @@
 #include <fstream>
+#include <utility>
 
 #include "Map.h"
 #include "Entity.h"
@@ -6,8 +7,8 @@
 #include "components/TileComponent.h"
 #include "components/MeshComponent.h"
 
-Map::Map(const glm::vec2& _sizeMap, unsigned int _tileSize)
-    : sizeMap(_sizeMap), tileSize(_tileSize) {  }
+Map::Map(const glm::vec2& _sizeMap, unsigned int _tileSize, std::string _filePath)
+    : sizeMap(_sizeMap), tileSize(_tileSize), filePath(std::move(_filePath)) {  }
 
 Map::~Map() = default;
 
@@ -50,7 +51,7 @@ void Map::addTile(const glm::vec2& _tilePos, const glm::vec2& _scale, const std:
 
 void Map::createMapFile() {
     std::ofstream mapFile;
-    mapFile.open("levels/level1.map", std::ios::out);
+    mapFile.open(filePath, std::ios::out);
 
     for ( int i = 0; i < Editor::tileManager->entitiesCount(); i++ ) {
         if ( tilesID[i] < 10 ) mapFile << 0;
@@ -84,3 +85,9 @@ void Map::createMapFile() {
 
     mapFile.close();
 }
+
+std::string Map::getFilePath() const { return filePath; }
+
+unsigned int Map::getTileSize() const { return tileSize; }
+
+glm::vec2 Map::getMapSize() const { return sizeMap; }

@@ -1,3 +1,5 @@
+#include "fmt/core.h"
+
 #include "EditorUI.h"
 #include "Editor.h"
 #include "EntityManager.h"
@@ -5,8 +7,7 @@
 #include "Entity.h"
 #include "components/TileComponent.h"
 #include "Map.h"
-
-#include "fmt/core.h"
+#include "LuaManager.h"
 
 EditorUI::EditorUI(ImGuiIO& _io) : io(_io), entitySelected(nullptr), tileSelected("", nullptr) {  }
 
@@ -106,7 +107,10 @@ void EditorUI::mainMenuBar() {
         if ( ImGui::BeginMenu("File") ) {
             if ( ImGui::MenuItem("New") ) {  }
             if ( ImGui::MenuItem("Open", "Ctrl+O") ) {  }
-            if ( ImGui::MenuItem("Save", "Ctrl+S") ) { Editor::map->createMapFile(); }
+            if ( ImGui::MenuItem("Save", "Ctrl+S") ) {
+                Editor::map->createMapFile();
+                LuaManager::writeFile("levels/level1.lua");
+            }
 
             ImGui::Separator();
 
