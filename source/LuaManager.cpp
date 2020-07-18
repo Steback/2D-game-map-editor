@@ -8,6 +8,7 @@
 #include "Editor.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include "Entity.h"
 
 LuaManager::LuaManager() = default;
 
@@ -39,13 +40,85 @@ void LuaManager::writeFile(const std::string &_fileName) {
 
     // Write map info
     luaFile << "\tmap = {\n";
-    luaFile << "\t\ttextureAssetId = mapTextureAssetId,\n";
+    luaFile << "\t\ttextureAssetId = \"terrain-texture-day\",\n";
     luaFile << "\t\tfile = \"" << Editor::map->getFilePath() << "\",\n";
-    luaFile << "\t\tscale = " << Editor::map->getTileSize() << ",\n";
+    luaFile << "\t\tscale = " << Editor::map->getTileSize() - 2 << ",\n";
     luaFile << "\t\ttileSize = 32,\n";
     luaFile << "\t\tmapSizeX = " << Editor::map->getMapSize().x << ",\n";
     luaFile << "\t\tmapSizeY = " << Editor::map->getMapSize().y << ",\n";
     luaFile << "\t},\n";
+
+    luaFile << '\n';
+
+    // Write entities info
+    luaFile << "\tentities = {\n";
+
+    if ( Editor::entityManager->entitiesCount() > 0 ) {
+        for ( int i = 0; i < Editor::entityManager->entitiesCount(); i++ ) {
+            auto* entity = Editor::entityManager->getEntityByID(i + 1);
+            luaFile << "\t\t[" << i << "] = {\n";
+
+            // Entity name
+            luaFile << "\t\t\tname = \"" << entity->name << "\",\n";
+
+            // Entity layer
+            luaFile << "\t\t\tlayer = " << static_cast<int>(entity->layer) << ",\n";
+
+            // Entity Components
+            luaFile << "\t\t\tcomponents = {\n";
+
+            // Transform component
+            auto* entityTransform = dynamic_cast<TransformComponent*>(entity->components[0]);
+
+            luaFile << "\t\t\t\ttransform = {\n";
+
+            // Position
+            luaFile << "\t\t\t\t\tposition = {\n";
+            luaFile << "\t\t\t\t\t\tx = " << entityTransform->translate.x << ",\n";
+            luaFile << "\t\t\t\t\t\ty = " << entityTransform->translate.y << "\n";
+            luaFile << "\t\t\t\t\t},\n";
+
+            // Velocity
+            luaFile << "\t\t\t\t\tvelocity = {\n";
+            luaFile << "\t\t\t\t\t\tx = 0,\n";
+            luaFile << "\t\t\t\t\t\ty = 0\n";
+            luaFile << "\t\t\t\t\t},\n";
+
+            luaFile << "\t\t\t\t\twidth = 32,\n";
+            luaFile << "\t\t\t\t\theight = 32,\n";
+            luaFile << "\t\t\t\t\tscale = 1,\n";
+            luaFile << "\t\t\t\t\trotation = 0\n";
+
+            // End Transform component
+            luaFile << "\t\t\t\t},\n";
+
+            // Sprite component
+            auto* entitySprite = dynamic_cast<SpriteComponent*>(entity->components[1]);
+
+            luaFile << "\t\t\t\tsprite = {\n";
+            luaFile << "\t\t\t\t\ttextureAssetId = \"" << entitySprite->textureID << "\",\n";
+
+            if ( entity->layer == PLAYER_LAYER ) {
+                luaFile << "\t\t\t\t\tanimated = true,\n";
+                luaFile << "\t\t\t\t\tframeCount = 2,\n";
+                luaFile << "\t\t\t\t\tanimationSpeed = 90,\n";
+                luaFile << "\t\t\t\t\thasDirections = true,\n";
+                luaFile << "\t\t\t\t\tfixed = false\n";
+            } else {
+                luaFile << "\t\t\t\t\tanimated = false\n";
+            }
+
+            // End Sprite component
+            luaFile << "\t\t\t\t},\n";
+
+            // End Entity Components
+            luaFile << "\t\t\t},\n";
+
+            luaFile << "\t\t}" << ( i == Editor::entityManager->entitiesCount() - 1 ? "" : "," ) << "\n";
+        }
+    }
+
+    luaFile << "\t}\n";
 
     // End file
     luaFile << "}\n";

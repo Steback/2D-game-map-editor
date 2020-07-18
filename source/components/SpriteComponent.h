@@ -9,10 +9,11 @@
 class SpriteComponent : public Component {
     public:
         std::shared_ptr<TextureManager> texture{};
+        std::string textureID;
         int spriteIndex;
 
-        explicit SpriteComponent(const std::string& textureID, int _spriteIndex)
-            : texture(Editor::assetsManager->getTexture(textureID)), spriteIndex(_spriteIndex) {  }
+        explicit SpriteComponent(const std::string& _textureID, int _spriteIndex)
+            : texture(Editor::assetsManager->getTexture(_textureID)), spriteIndex(_spriteIndex), textureID(_textureID) {  }
 
         void initialize() override {
 
