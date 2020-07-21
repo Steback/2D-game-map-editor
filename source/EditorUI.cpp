@@ -109,7 +109,7 @@ void EditorUI::mainMenuBar() {
             if ( ImGui::MenuItem("Open", "Ctrl+O") ) {  }
             if ( ImGui::MenuItem("Save", "Ctrl+S") ) {
                 Editor::map->createMapFile();
-                LuaManager::writeFile("levels/level1.lua");
+                LuaManager::writeFile("levels/Level1.lua");
             }
 
             ImGui::Separator();

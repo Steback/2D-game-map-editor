@@ -1,7 +1,7 @@
-level1 =  {
+Level1 =  {
 	map = {
 		textureAssetId = "terrain-texture-day",
-		file = "levels/level1.map",
+		file = "levels/Level1.map",
 		scale = 2,
 		tileSize = 32,
 		mapSizeX = 26,
@@ -15,8 +15,8 @@ level1 =  {
 			components = {
 				transform = {
 					position = {
-						x = -0.593746,
-						y = 1.16666
+						x = 0,
+						y = 0
 					},
 					velocity = {
 						x = 0,
@@ -35,7 +35,19 @@ level1 =  {
 					hasDirections = true,
 					fixed = false
 				},
-			},
+				collider = {
+					tag = "PLAYER"
+				},
+				input = {
+					keyboard = {
+						up = "w",
+						left = "a",
+						down = "s",
+						right = "d",
+						shoot = "space"
+					}
+				}
+			}
 		},
 		[1] = {
 			name = "tank",
@@ -43,8 +55,8 @@ level1 =  {
 			components = {
 				transform = {
 					position = {
-						x = -19.3438,
-						y = 11.1667
+						x = 0,
+						y = 0
 					},
 					velocity = {
 						x = 0,
@@ -59,7 +71,37 @@ level1 =  {
 					textureAssetId = "tank-big",
 					animated = false
 				},
-			},
+				collider = {
+					tag = "ENEMY"
+				}
+			}
+		},
+		[2] = {
+			name = "truck",
+			layer = 3,
+			components = {
+				transform = {
+					position = {
+						x = 0,
+						y = 0
+					},
+					velocity = {
+						x = 0,
+						y = 0
+					},
+					width = 32,
+					height = 32,
+					scale = 1,
+					rotation = 0
+				},
+				sprite = {
+					textureAssetId = "truck",
+					animated = false
+				},
+				collider = {
+					tag = "VEGETATION"
+				}
+			}
 		}
 	}
 }

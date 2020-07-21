@@ -111,8 +111,40 @@ void LuaManager::writeFile(const std::string &_fileName) {
             // End Sprite component
             luaFile << "\t\t\t\t},\n";
 
+            // Collider component
+            luaFile << "\t\t\t\tcollider = {\n";
+
+            if ( entity->layer == PLAYER_LAYER ) {
+                luaFile << "\t\t\t\t\ttag = \"PLAYER\"\n";
+            } else if ( entity->layer == ENEMY_LAYER ) {
+                luaFile << "\t\t\t\t\ttag = \"ENEMY\"\n";
+            } else if ( entity->layer == VEGETATION_LAYER || entity->layer == OBSTACLE_LAYER ) {
+                luaFile << "\t\t\t\t\ttag = \"VEGETATION\"\n";
+            } else {
+                luaFile << "\t\t\t\t\ttag = \"LEVEL_COMPLETE\"\n";
+            }
+
+            // End Collider component
+            luaFile << "\t\t\t\t}" << ( entity->layer == PLAYER_LAYER ? "," : "" ) << "\n";
+
+            // Input component
+            if ( entity->layer == PLAYER_LAYER ) {
+                luaFile << "\t\t\t\tinput = {\n";
+
+                luaFile << "\t\t\t\t\tkeyboard = {\n";
+                luaFile << "\t\t\t\t\t\tup = \"w\",\n";
+                luaFile << "\t\t\t\t\t\tleft = \"a\",\n";
+                luaFile << "\t\t\t\t\t\tdown = \"s\",\n";
+                luaFile << "\t\t\t\t\t\tright = \"d\",\n";
+                luaFile << "\t\t\t\t\t\tshoot = \"space\"\n";
+                luaFile << "\t\t\t\t\t}\n";
+
+                // End Input component
+                luaFile << "\t\t\t\t}\n";
+            }
+
             // End Entity Components
-            luaFile << "\t\t\t},\n";
+            luaFile << "\t\t\t}\n";
 
             luaFile << "\t\t}" << ( i == Editor::entityManager->entitiesCount() - 1 ? "" : "," ) << "\n";
         }
