@@ -1,14 +1,94 @@
 <Images>
     <Image>
-        <name>chopper-sinngle</name>
-        <path>assets/images/chopper-sinngle.png</path>
+        <name>chopper-single</name>
+        <path>assets/images/chopper-single.png</path>
     </Image>
     <Image>
-        <name>tank-big</name>
+        <name>obstacles-texture</name>
+        <path>assets/images/obstacles.png</path>
+    </Image>
+    <Image>
+        <name>truck-down-texture</name>
+        <path>assets/images/truck-down.png</path>
+    </Image>
+    <Image>
+        <name>tank-big-down-texture</name>
         <path>assets/images/tank-big-down.png</path>
     </Image>
     <Image>
-        <name>truck</name>
-        <path>assets/images/truck-down.png</path>
+        <name>tank-small-left-texture</name>
+        <path>assets/images/tank-small-left.png</path>
+    </Image>
+    <Image>
+        <name>army-group-1-texture</name>
+        <path>assets/images/army-group-1.png</path>
+    </Image>
+    <Image>
+        <name>army-group-2-texture</name>
+        <path>assets/images/army-group-2.png</path>
+    </Image>
+    <Image>
+        <name>army-group-3-texture</name>
+        <path>assets/images/army-group-3.png</path>
+    </Image>
+    <Image>
+        <name>rock-big-1-texture</name>
+        <path>assets/images/rock-big-1.png</path>
+    </Image>
+    <Image>
+        <name>rock-big-2-texture</name>
+        <path>assets/images/rock-big-2.png</path>
+    </Image>
+    <Image>
+        <name>rock-big-3-texture</name>
+        <path>assets/images/rock-big-3.png</path>
+    </Image>
+    <Image>
+        <name>rock-big-4-texture</name>
+        <path>assets/images/rock-big-4.png</path>
+    </Image>
+    <Image>
+        <name>rock-small-1-texture</name>
+        <path>assets/images/rock-small-1.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-1-texture</name>
+        <path>assets/images/tree-small-1.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-2-texture</name>
+        <path>assets/images/tree-small-2.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-3-texture</name>
+        <path>assets/images/tree-small-3.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-4-texture</name>
+        <path>assets/images/tree-small-4.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-5-texture</name>
+        <path>assets/images/tree-small-5.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-6-texture</name>
+        <path>assets/images/tree-small-6.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-7-texture</name>
+        <path>assets/images/tree-small-7.png</path>
+    </Image>
+    <Image>
+        <name>tree-small-8-texture</name>
+        <path>assets/images/tree-small-8.png</path>
+    </Image>
+    <Image>
+        <name>start-texture</name>
+        <path>assets/images/start.png</path>
+    </Image>
+    <Image>
+        <name>heliport-texture</name>
+        <path>assets/images/heliport.png</path>
     </Image>
 </Images>
