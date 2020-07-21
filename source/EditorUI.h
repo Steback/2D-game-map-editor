@@ -21,6 +21,7 @@ class EditorUI {
         void updateMouseInput(const glm::vec2& _camOffset);
         void selectEntity(glm::vec2 _mousePos);
         void mainMenuBar();
+        void loadFile();
         void entitiesPanel();
         void proprietiesPanel();
         void tilesMapPanel();
@@ -39,6 +40,7 @@ class EditorUI {
         ImGuiWindowFlags windowFlags{};
         bool showInfo{};
         bool createEntity{};
+        bool openFile{};
         std::vector<unsigned int> entitiesID;
         std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
 };

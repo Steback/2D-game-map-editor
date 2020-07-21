@@ -7,7 +7,7 @@ class LuaManager {
     public:
         LuaManager();
         ~LuaManager();
-        void loadFile(const std::string& _filePath);
+        static void loadFile(const std::string& _filePath);
         static void writeFile(const std::string& _fileName);
 
     private:

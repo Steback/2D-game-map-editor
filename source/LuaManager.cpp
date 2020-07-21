@@ -15,7 +15,95 @@ LuaManager::LuaManager() = default;
 LuaManager::~LuaManager() = default;
 
 void LuaManager::loadFile(const std::string &_filePath) {
+    sol::state lua;
+    lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
+    // Level Name
+    int idx = _filePath.rfind('/');
+    std::string levelName = _filePath.substr(idx + 1);
+
+    // Remove .lua
+    idx = levelName.rfind('.');
+    int stringSize = levelName.size();
+
+    while ( stringSize > idx ) {
+        levelName.pop_back();
+        stringSize--;
+    }
+
+    lua.script_file(_filePath);
+
+    sol::table levelData = lua[levelName];
+
+    // LOADS MAP FORM LUA CONFIG FILE
+    sol::table levelMap = levelData["map"];
+    std::string mapTextureID = levelMap["textureAssetId"];
+
+    Editor::map = std::make_unique<Map>(
+            glm::vec2(static_cast<float>( levelMap["mapSizeX"]), static_cast<float>( levelMap["mapSizeY"])),
+            static_cast<unsigned int>(levelMap["scale"]) + 2, levelMap["file"]);
+
+    Editor::map->loadMap();
+
+    // LOADS ENITITES FORM LUA CONFIG FILE
+    sol::table levelEntities = levelData["entities"];
+
+    unsigned int entityIndex = 0;
+
+    while ( true ) {
+        sol::optional<sol::table> existsEntityIndexNode = levelEntities[entityIndex];
+
+        if (existsEntityIndexNode == sol::nullopt) {
+            break;
+        } else {
+            sol::table entity = levelEntities[entityIndex];
+            std::string entityName = entity["name"];
+            LayerType entityLayerType = static_cast<LayerType>(static_cast<int>(entity["layer"]));
+
+            // Add entity
+            auto &newEntity = Editor::entityManager->addEntity(Editor::entityManager->entitiesCount(),
+                                                               entityName, entityLayerType);
+
+            // Add Transform component
+            sol::optional<sol::table> existsTransformComponent = entity["components"]["transform"];
+
+            if (existsTransformComponent != sol::nullopt) {
+                newEntity.addComponent<TransformComponent>(
+                        glm::vec2(static_cast<int>(entity["components"]["transform"]["position"]["x"]),
+                                  static_cast<int>(entity["components"]["transform"]["position"]["y"])),
+                        glm::vec2(static_cast<int>(entity["components"]["transform"]["scale"]),
+                                  static_cast<int>(entity["components"]["transform"]["scale"])),
+                        0.0f, glm::vec2(0.0f, 0.0f)
+                );
+            }
+
+            // Add Sprite Component
+            sol::optional<sol::table> existsSpriteComponent = entity["components"]["sprite"];
+
+            if (existsSpriteComponent != sol::nullopt) {
+                std::string textureId = entity["components"]["sprite"]["textureAssetId"];
+
+                for (int i = 0; i < Editor::assetsManager->texturesNames.size(); i++) {
+                    if (textureId == Editor::assetsManager->texturesNames[i]) {
+                        newEntity.addComponent<SpriteComponent>(textureId, i);
+                        break;
+                    }
+                }
+            }
+
+            newEntity.addComponent<MeshComponent>(std::vector<Shape>{
+                    {glm::vec2(-1.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
+                    {glm::vec2(1.0f, 1.0f),   glm::vec2(1.0f, 1.0f)},
+                    {glm::vec2(-1.0f, 1.0f),  glm::vec2(0.0f, 1.0)},
+                    {glm::vec2(1.0f, -1.0f),  glm::vec2(1.0f, 0.0f)},
+            }, std::vector<GLuint>{
+                    1, 3, 2,
+                    0, 3, 2
+            });
+
+            entityIndex++;
+        }
+    }
 }
 
 void LuaManager::writeFile(const std::string &_fileName) {

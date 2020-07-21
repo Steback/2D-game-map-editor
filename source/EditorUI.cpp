@@ -106,7 +106,9 @@ void EditorUI::mainMenuBar() {
     if ( ImGui::BeginMainMenuBar() ) {
         if ( ImGui::BeginMenu("File") ) {
             if ( ImGui::MenuItem("New") ) {  }
-            if ( ImGui::MenuItem("Open", "Ctrl+O") ) {  }
+
+            if ( ImGui::MenuItem("Open", "Ctrl+O") ) { openFile = !openFile; }
+
             if ( ImGui::MenuItem("Save", "Ctrl+S") ) {
                 Editor::map->createMapFile();
                 LuaManager::writeFile("levels/Level1.lua");
@@ -124,6 +126,27 @@ void EditorUI::mainMenuBar() {
     }
 
     getVersions();
+}
+
+void EditorUI::loadFile() {
+    if ( openFile ) {
+        static std::array<char, 30> fileName;
+
+        ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
+
+        ImGui::Begin("Open File", &openFile, windowFlags);
+            ImGui::InputText("Entity Name", &fileName[0], fileName.size());
+
+            if ( ImGui::Button("Open") ) {
+                LuaManager::loadFile("levels/" + std::string(fileName.data()));
+
+                fileName.fill('\0');
+
+                openFile = !openFile;
+            }
+        ImGui::End();
+    }
 }
 
 void EditorUI::entitiesPanel() {
@@ -354,6 +377,7 @@ void EditorUI::renderUI() {
     ImGui::NewFrame();
 
     mainMenuBar();
+    loadFile();
     entitiesPanel();
     proprietiesPanel();
     tilesMapPanel();
