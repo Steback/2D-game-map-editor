@@ -53,7 +53,7 @@ void LuaManager::loadFile(const std::string &_filePath) {
     while ( true ) {
         sol::optional<sol::table> existsEntityIndexNode = levelEntities[entityIndex];
 
-        if (existsEntityIndexNode == sol::nullopt) {
+        if ( existsEntityIndexNode == sol::nullopt ) {
             break;
         } else {
             sol::table entity = levelEntities[entityIndex];
@@ -67,20 +67,24 @@ void LuaManager::loadFile(const std::string &_filePath) {
             // Add Transform component
             sol::optional<sol::table> existsTransformComponent = entity["components"]["transform"];
 
-            if (existsTransformComponent != sol::nullopt) {
+            if ( existsTransformComponent != sol::nullopt ) {
+                glm::vec2 entityPos = glm::vec2(static_cast<int>(entity["components"]["transform"]["position"]["x"]),
+                                               static_cast<int>(entity["components"]["transform"]["position"]["y"]));
+
+                entityPos.x -= 750;
+                entityPos.y -= 500;
+
+                entityPos /= 10;
+
                 newEntity.addComponent<TransformComponent>(
-                        glm::vec2(static_cast<int>(entity["components"]["transform"]["position"]["x"]),
-                                  static_cast<int>(entity["components"]["transform"]["position"]["y"])),
-                        glm::vec2(static_cast<int>(entity["components"]["transform"]["scale"]),
-                                  static_cast<int>(entity["components"]["transform"]["scale"])),
-                        0.0f, glm::vec2(0.0f, 0.0f)
+                        entityPos, glm::vec2(2.0f, 2.0f), 0.0f, glm::vec2(0.0f, 0.0f)
                 );
             }
 
             // Add Sprite Component
             sol::optional<sol::table> existsSpriteComponent = entity["components"]["sprite"];
 
-            if (existsSpriteComponent != sol::nullopt) {
+            if ( existsSpriteComponent != sol::nullopt ) {
                 std::string textureId = entity["components"]["sprite"]["textureAssetId"];
 
                 for (int i = 0; i < Editor::assetsManager->texturesNames.size(); i++) {

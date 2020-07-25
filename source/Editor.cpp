@@ -75,9 +75,6 @@ void Editor::initialized() {
     }
 
     assetsManager->loadTextures();
-
-    map = std::make_unique<Map>(glm::vec2(26, 20), 4.0f, "levels/Level1.map");
-    map->loadMap();
 }
 
 bool Editor::isRunning() { return window->isRunning(); }
