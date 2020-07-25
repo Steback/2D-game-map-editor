@@ -7,26 +7,30 @@
 #include "components/TileComponent.h"
 #include "components/MeshComponent.h"
 
-Map::Map(const glm::vec2& _sizeMap, unsigned int _tileSize, std::string _filePath)
-    : sizeMap(_sizeMap), tileSize(_tileSize), filePath(std::move(_filePath)) {  }
+Map::Map() {  }
 
 Map::~Map() = default;
 
-void Map::loadMap() {
+void Map::loadMap(const glm::vec2& _sizeMap, unsigned int _tileSize, std::string _filePath, bool emptyMap) {
+    sizeMap = _sizeMap;
+    tileSize = _tileSize;
+    filePath = std::move(_filePath);
     std::fstream mapFile;
     mapFile.open(filePath);
-
     int x = 1;
 
     for ( int i = 0; i < static_cast<int>(sizeMap.y); i++ ) {
         for ( int j = 0; j < static_cast<int>(sizeMap.x); j++ ) {
             char ch[2];
+            int tileID = 1;
 
-            mapFile.get(ch[0]);
+            if ( !emptyMap ) {
+                mapFile.get(ch[0]);
 
-            mapFile.get(ch[1]);
+                mapFile.get(ch[1]);
 
-            int tileID = std::atoi(ch) + 1;
+                tileID = std::atoi(ch) + 1;
+            }
 
             glm::vec2 tPos;
 

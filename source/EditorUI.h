@@ -22,6 +22,7 @@ class EditorUI {
         void selectEntity(glm::vec2 _mousePos);
         void mainMenuBar();
         void loadFile();
+        void createMap();
         void entitiesPanel();
         void proprietiesPanel();
         void tilesMapPanel();
@@ -29,7 +30,6 @@ class EditorUI {
         void renderUI();
         glm::vec2 getMousePos() const;
         glm::vec2 getWindowSize() const;
-        glm::vec2 getCamOffset();
 
         Entity* entitySelected;
         std::pair<std::string, std::shared_ptr<TextureManager> > tileSelected;
@@ -41,6 +41,7 @@ class EditorUI {
         bool showInfo{};
         bool createEntity{};
         bool openFile{};
+        bool createNewMap{};
         std::vector<unsigned int> entitiesID;
         std::vector<std::string> layerTypes = { "VEGETATION_LAYER", "ENEMY_LAYER", "OBSTACLE_LAYER", "PLAYER_LAYER" };
 };

@@ -10,9 +10,9 @@ class Entity;
 
 class Map {
     public:
-        Map(const glm::vec2& _sizeMap, unsigned int _tileSize, std::string _filePath);
+        Map();
         ~Map();
-        void loadMap();
+        void loadMap(const glm::vec2& _sizeMap, unsigned int _tileSize, std::string _filePath, bool emptyMap = false);
         void addTile(const glm::vec2& _tilePos, const glm::vec2& _scale, const std::string& _textureID, const std::string& _tileName);
         void createMapFile();
         std::string getFilePath() const;

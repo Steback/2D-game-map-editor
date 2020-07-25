@@ -14,7 +14,7 @@ LuaManager::LuaManager() = default;
 
 LuaManager::~LuaManager() = default;
 
-void LuaManager::loadFile(const std::string &_filePath) {
+void LuaManager::loadFile(const std::string &_filePath, std::vector<unsigned int>& entitiesID) {
     sol::state lua;
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
@@ -39,11 +39,11 @@ void LuaManager::loadFile(const std::string &_filePath) {
     sol::table levelMap = levelData["map"];
     std::string mapTextureID = levelMap["textureAssetId"];
 
-    Editor::map = std::make_unique<Map>(
-            glm::vec2(static_cast<float>( levelMap["mapSizeX"]), static_cast<float>( levelMap["mapSizeY"])),
-            static_cast<unsigned int>(levelMap["scale"]) + 2, levelMap["file"]);
+    Editor::map = std::make_unique<Map>();
 
-    Editor::map->loadMap();
+    Editor::map->loadMap(glm::vec2(static_cast<float>( levelMap["mapSizeX"]),
+            static_cast<float>( levelMap["mapSizeY"])),static_cast<unsigned int>(levelMap["scale"]) + 2,
+                    levelMap["file"]);
 
     // LOADS ENITITES FORM LUA CONFIG FILE
     sol::table levelEntities = levelData["entities"];
@@ -61,8 +61,11 @@ void LuaManager::loadFile(const std::string &_filePath) {
             LayerType entityLayerType = static_cast<LayerType>(static_cast<int>(entity["layer"]));
 
             // Add entity
-            auto &newEntity = Editor::entityManager->addEntity(Editor::entityManager->entitiesCount(),
-                                                               entityName, entityLayerType);
+            int entityID = Editor::entityManager->entitiesCount() + 1;
+
+            auto &newEntity = Editor::entityManager->addEntity(entityID, entityName, entityLayerType);
+
+            entitiesID.emplace_back(entityID);
 
             // Add Transform component
             sol::optional<sol::table> existsTransformComponent = entity["components"]["transform"];

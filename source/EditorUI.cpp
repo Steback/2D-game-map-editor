@@ -105,7 +105,7 @@ void EditorUI::mainMenuBar() {
     // Menu bar
     if ( ImGui::BeginMainMenuBar() ) {
         if ( ImGui::BeginMenu("File") ) {
-            if ( ImGui::MenuItem("New") ) {  }
+            if ( ImGui::MenuItem("New") ) { createNewMap = !createNewMap; }
 
             if ( ImGui::MenuItem("Open", "Ctrl+O") ) { openFile = !openFile; }
 
@@ -139,12 +139,34 @@ void EditorUI::loadFile() {
             ImGui::InputText("Entity Name", &fileName[0], fileName.size());
 
             if ( ImGui::Button("Open") ) {
-                LuaManager::loadFile("levels/" + std::string(fileName.data()));
+                LuaManager::loadFile("levels/" + std::string(fileName.data()), entitiesID);
 
                 fileName.fill('\0');
 
                 openFile = !openFile;
             }
+        ImGui::End();
+    }
+}
+
+void EditorUI::createMap() {
+    if ( createNewMap ) {
+        static glm::vec2 mapSize;
+
+        ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
+
+        ImGui::Begin("Create new map", &createNewMap, windowFlags);
+        ImGui::InputFloat("X", &mapSize.x, 1);
+        ImGui::InputFloat("Y", &mapSize.y, 1);
+
+        if ( ImGui::Button("Create") ) {
+            Editor::tileManager->destroy();
+            Editor::entityManager->destroy();
+            Editor::map->loadMap(mapSize, 4, "", true);
+
+            createNewMap = !createNewMap;
+        }
         ImGui::End();
     }
 }
@@ -378,6 +400,7 @@ void EditorUI::renderUI() {
 
     mainMenuBar();
     loadFile();
+    createMap();
     entitiesPanel();
     proprietiesPanel();
     tilesMapPanel();
