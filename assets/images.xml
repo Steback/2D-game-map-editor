@@ -8,6 +8,14 @@
         <path>assets/images/obstacles.png</path>
     </Image>
     <Image>
+        <name>truck-left-texture</name>
+        <path>assets/images/truck-left.png</path>
+    </Image>
+    <Image>
+        <name>truck-right-texture</name>
+        <path>assets/images/truck-right.png</path>
+    </Image>
+    <Image>
         <name>truck-down-texture</name>
         <path>assets/images/truck-down.png</path>
     </Image>
@@ -16,8 +24,20 @@
         <path>assets/images/tank-big-down.png</path>
     </Image>
     <Image>
+        <name>tank-big-left-texture</name>
+        <path>assets/images/tank-big-left.png</path>
+    </Image>
+    <Image>
+        <name>tank-big-right-texture</name>
+        <path>assets/images/tank-big-right.png</path>
+    </Image>
+    <Image>
         <name>tank-small-left-texture</name>
         <path>assets/images/tank-small-left.png</path>
+    </Image>
+    <Image>
+        <name>tank-small-right-texture</name>
+        <path>assets/images/tank-small-right.png</path>
     </Image>
     <Image>
         <name>army-group-1-texture</name>

@@ -75,6 +75,8 @@ void Editor::initialized() {
     }
 
     assetsManager->loadTextures();
+
+    map = std::make_unique<Map>();
 }
 
 bool Editor::isRunning() { return window->isRunning(); }

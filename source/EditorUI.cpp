@@ -139,6 +139,7 @@ void EditorUI::loadFile() {
             ImGui::InputText("Entity Name", &fileName[0], fileName.size());
 
             if ( ImGui::Button("Open") ) {
+                entitiesID = std::vector<unsigned int>();
                 LuaManager::loadFile("levels/" + std::string(fileName.data()), entitiesID);
 
                 fileName.fill('\0');
@@ -151,22 +152,25 @@ void EditorUI::loadFile() {
 
 void EditorUI::createMap() {
     if ( createNewMap ) {
+        static std::array<char, 30> fileName;
         static glm::vec2 mapSize;
 
         ImGui::SetNextWindowPos(ImVec2(( io.DisplaySize.x / 2 ) - 150,( io.DisplaySize.y / 2 ) - 115), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(300, 230), ImGuiCond_Always);
 
         ImGui::Begin("Create new map", &createNewMap, windowFlags);
-        ImGui::InputFloat("X", &mapSize.x, 1);
-        ImGui::InputFloat("Y", &mapSize.y, 1);
+            ImGui::InputText("Entity Name", &fileName[0], fileName.size());
+            ImGui::InputFloat("X", &mapSize.x, 1);
+            ImGui::InputFloat("Y", &mapSize.y, 1);
 
-        if ( ImGui::Button("Create") ) {
-            Editor::tileManager->destroy();
-            Editor::entityManager->destroy();
-            Editor::map->loadMap(mapSize, 4, "", true);
+            if ( ImGui::Button("Create") ) {
+                Editor::tileManager->destroy();
+                Editor::entityManager->destroy();
+                entitiesID = std::vector<unsigned int>();
+                Editor::map->loadMap(mapSize, 4, fileName.data(), true);
 
-            createNewMap = !createNewMap;
-        }
+                createNewMap = !createNewMap;
+            }
         ImGui::End();
     }
 }

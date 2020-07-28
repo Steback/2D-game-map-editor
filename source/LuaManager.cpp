@@ -39,7 +39,8 @@ void LuaManager::loadFile(const std::string &_filePath, std::vector<unsigned int
     sol::table levelMap = levelData["map"];
     std::string mapTextureID = levelMap["textureAssetId"];
 
-    Editor::map = std::make_unique<Map>();
+    Editor::entityManager->destroy();
+    Editor::tileManager->destroy();
 
     Editor::map->loadMap(glm::vec2(static_cast<float>( levelMap["mapSizeX"]),
             static_cast<float>( levelMap["mapSizeY"])),static_cast<unsigned int>(levelMap["scale"]) + 2,
@@ -74,8 +75,8 @@ void LuaManager::loadFile(const std::string &_filePath, std::vector<unsigned int
                 glm::vec2 entityPos = glm::vec2(static_cast<int>(entity["components"]["transform"]["position"]["x"]),
                                                static_cast<int>(entity["components"]["transform"]["position"]["y"]));
 
-                entityPos.x -= 750;
-                entityPos.y -= 500;
+                entityPos.x -= 800;
+                entityPos.y -= 600;
 
                 entityPos /= 10;
 

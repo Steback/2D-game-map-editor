@@ -1510,34 +1510,6 @@ LevelExample = {
                     tag = "VEGETATION"
                 }
             }
-        },
-        [47] = {
-            name = "radar",
-            layer = 6,
-            components = {
-                transform = {
-                    position = {
-                        x = 720,
-                        y = 15
-                    },
-                    velocity = {
-                        x = 0,
-                        y = 0
-                    },
-                    width = 64,
-                    height = 64,
-                    scale = 1,
-                    rotation = 0
-                },
-                sprite = {
-                    textureAssetId = "radar-texture",
-                    animated = true,
-                    frameCount = 8,
-                    animationSpeed = 150,
-                    hasDirections = false,
-                    fixed = true
-                }
-            }
         }
     }
 }
