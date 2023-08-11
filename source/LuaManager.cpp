@@ -1,7 +1,7 @@
 #include <fstream>
 
 #define SOL_ALL_SAFETIES_ON 1
-#include "sol.hpp"
+#include "sol/sol.hpp"
 #include "fmt/core.h"
 
 #include "LuaManager.h"

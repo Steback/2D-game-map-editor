@@ -1,15 +1,34 @@
 cmake_minimum_required(VERSION 3.15)
 project(2D_Game_Map_Editor)
 
-set(CMAKE_CXX_STANDARD 17)
+### Settings ###
+set(CMAKE_CXX_STANDARD 20)
 
-# Editor Source Files
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY $<1:${CMAKE_SOURCE_DIR}>)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_SOURCE_DIR}>)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_SOURCE_DIR}>)
+
+### Dependencies ###
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
+find_package(stb REQUIRED)
+find_package(imgui REQUIRED)
+find_package(tinyxml2 REQUIRED)
+find_package(fmt REQUIRED)
+find_package(lua REQUIRED)
+find_package(sol2 REQUIRED)
+
+# ImGui Bindings ###
+include_directories(bindings)
+file(GLOB BINDINGS_SOURCE_FILES ${PROJECT_SOURCE_DIR}/bindings/*.cpp)
+
+### Source Files ###
 file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-# Dear ImGui Source Files
-file(GLOB IMGUI_SOURCE ${PROJECT_SOURCE_DIR}/lib/imgui/*.cpp)
-
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCE})
+### Executable ###
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${BINDINGS_SOURCE_FILES})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 set_target_properties(
@@ -18,43 +37,14 @@ set_target_properties(
         OUTPUT_NAME "Editor"
 )
 
-# OpenGL
-find_package(OpenGL REQUIRED)
-
-# GLEW
-find_package(GLEW REQUIRED)
-
-# GLFW
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/glfw)
-
-# GLM
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/glm)
-
-# stb_image
-include_directories(${PROJECT_SOURCE_DIR}/lib/stb)
-
-# Dear Imgui
-include_directories(${PROJECT_SOURCE_DIR}/lib/imgui)
-
-#  TinyXML2
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/tinyxml2)
-
-# {fmt}
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fmt)
-
-# Lua and Sol
-include_directories(${PROJECT_SOURCE_DIR}/lib/lua)
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/lua)
-
 target_link_libraries(${PROJECT_NAME}
-        OpenGL::GL
-        GLEW
+        opengl::opengl
+        GLEW::GLEW
         glfw
-        glm
-        tinyxml2
-        fmt
-        LuaLib
-        )
+        imgui::imgui
+        glm::glm
+        stb::stb
+        tinyxml2::tinyxml2
+        fmt::fmt
+        lua::lua
+        sol2::sol2)

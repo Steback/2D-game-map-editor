@@ -1,6 +1,9 @@
+#include "EditorUI.h"
+
+#include <array>
+
 #include "fmt/core.h"
 
-#include "EditorUI.h"
 #include "Editor.h"
 #include "EntityManager.h"
 #include "AssetsManager.h"

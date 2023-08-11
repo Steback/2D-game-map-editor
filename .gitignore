@@ -15,4 +15,10 @@ cmake-build-debug/
 *.ini
 
 # Editor
-Editor
+Editor*
+
+# Bindinds
+bindings/
+
+# Conan
+CMakeUserPresets.json
